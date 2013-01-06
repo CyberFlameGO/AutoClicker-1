@@ -9,3 +9,6 @@ Millisecond precision for delay between clicks.<br>
 Define how long the autoclicker should click for. Supports time, number of clicks.<br>
 A start delay so clicking happens when the user expects it.<br>
 An output for details of the current autoclick session.
+<p>
+Please note this project uses the JNA .jar file. You will need it in order to compile this code.<br>
+It can be found on GitHub, here https://github.com/twall/jna.
