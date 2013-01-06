@@ -11,4 +11,4 @@ A start delay so clicking happens when the user expects it.<br>
 An output for details of the current autoclick session.
 <p>
 Please note this project uses the JNA .jar file. You will need it in order to compile this code.<br>
-It can be found on GitHub, here https://github.com/twall/jna.
+It can be found on <a href=https://github.com/twall/jna>GitHub</a>.
