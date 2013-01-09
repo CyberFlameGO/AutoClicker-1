@@ -1,5 +1,7 @@
 package autoclicker;
 
+import gui.Hotkey.Modifier;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -18,11 +20,19 @@ import com.sun.jna.platform.KeyboardUtils;
  */
 public class AutoClicker {
 
+	public final static long DEFAULT_CLICK_DELAY = 1000;
+	
+	public final static int DEFAULT_SPREAD = 50;
+	public final static int DEFAULT_VARIATION = 50;
+	
+	public final static int MAX_SPREAD = 100;
+	public final static int MAX_VARIATION = 100;
+	
 	//delay when user clicks "Start!" or pushes hotkey without ignoreStartDelay enabled
 	private int startDelay;
 
 	//time between clicks
-	private int secondsClick = 1, milliClick;
+	private long clickDelay;
 
 	//anticheat detection variables
 	private int variation, spread;
@@ -36,8 +46,7 @@ public class AutoClicker {
 	//cheat detection option, default or advanced
 	private AnticheatOption anticheatOption;
 
-	private Modifiers modifier;
-	private int hotkeyInt;
+
 
 	//click duration... either forever, numClicks or timeDuration
 	private ClickDuration clickDuration;
@@ -47,23 +56,28 @@ public class AutoClicker {
 	
 	private Thread currentThread;
 	
-	private boolean manualStop;
+	private boolean manualStop, isRunning;
 	
+	
+	/**
+	 * Instantiates a new <code>AutoClicker</code> with the default values.
+	 */
 	public AutoClicker() {
-		initializeVariables();
+		initialiseVariables();
 		
 	}
 	
-	private void initializeVariables() {
+	/**
+	 * Initialises the variables.
+	 */
+	private void initialiseVariables() {
+		clickDelay = DEFAULT_CLICK_DELAY;
 		startDelay = 0;
-		secondsClick = 1;
-		milliClick = 0;
 		variation = 50;
 		spread = 50;
 		ignoreStartDelay = false;
 		anticheatDetection = false;
 		anticheatOption = AnticheatOption.Default;
-		modifier = Modifiers.values()[0];
 		clickDuration = ClickDuration.Forever;
 		
 		try {
@@ -81,12 +95,8 @@ public class AutoClicker {
 
 	//public methods to be called from GUI
 
-	public void setHotkey(Modifiers hotkey) {
-		this.modifier = hotkey;
-	}
-	
-	public void setHotkey(Integer num) {
-		hotkeyInt = num;
+	public boolean isRunning() {
+		return isRunning;
 	}
 
 	public void setHotkeyIgnoreDelay(boolean ignoreStartDelay) {
@@ -105,39 +115,39 @@ public class AutoClicker {
 	}
 	
 	public void setAnticheatSpread(int spread) {
+		if (spread < 0 || spread > MAX_SPREAD) throw new IllegalArgumentException();
 		this.spread = spread;
 	}
 
 	public void setAnticheatVariation(int variation) {
+		if (variation < 0 || variation > MAX_VARIATION) throw new IllegalArgumentException();
 		this.variation = variation;
 	}
 
 
 	//delay between click panel
 
-	public void setClickDelay(int seconds, int milli) {
-		secondsClick = seconds;
-		milliClick = milli;
+	public void setClickDelay(long clickDelay) {
+		if (clickDelay < 0) throw new IllegalArgumentException();
+		this.clickDelay = clickDelay;
 	}
 
 	//click duration option panel
 
-	public void setClickDuration(ClickDuration duration) {
-		clickDuration = duration;
+	public void setClickDuration(ClickDuration clickDuration) {
+		if (clickDuration == null) throw new NullPointerException();
+		this.clickDuration = clickDuration;
 	}
 
 	//run panel
 
-	public void runViaButton() {
-		run();
-	}
-	
-	public void runViaHotkey() {
+	public void start() {
 		run();
 	}
 
 	public void stop() {
 		manualStop = true;
+		System.out.println("Stopped");		
 	}
 
 	private void run() {
@@ -146,11 +156,11 @@ public class AutoClicker {
 		currentThread = new Thread() {
 			@Override
 			public void run() {
-				while (!KeyboardUtils.isPressed(modifier.keycode) && !manualStop) {
+				while (!manualStop) {
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
 					try {
-						Thread.sleep(secondsClick * 1000 + milliClick);
+						Thread.sleep(clickDelay);
 					} catch (InterruptedException e) {
 						//ignore
 					}
@@ -158,7 +168,7 @@ public class AutoClicker {
 			}
 		};
 		
-		currentThread.start();
+		//currentThread.start();
 	}
 	
 	public void setStartDelay(int startDelay) {
@@ -178,13 +188,4 @@ public class AutoClicker {
 		TimeDuration
 	}
 
-	public enum Modifiers {
-		Ctrl(KeyEvent.VK_CONTROL), Shift(KeyEvent.VK_SHIFT), Alt(KeyEvent.VK_ALT);
-		
-		public final int keycode;
-		
-		Modifiers(int keycode) {
-			this.keycode = keycode;
-		}
-	}
 }
