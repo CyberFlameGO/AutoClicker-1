@@ -39,7 +39,7 @@ import com.sun.jna.platform.KeyboardUtils;
 import autoclicker.AutoClicker;
 
 
-public class GUI extends JFrame{
+public class MainFrame extends JFrame{
 
 	//panels
 	private DelayPanel delayPanel;
@@ -57,7 +57,7 @@ public class GUI extends JFrame{
 	private Modifier modifier = Modifier.values()[0];
 	private NumKey numKey = NumKey.values()[0];
 
-	public GUI(AutoClicker autoClicker) {
+	public MainFrame(AutoClicker autoClicker) {
 		super("Autoclicker");
 		setNativeLAndF();
 
