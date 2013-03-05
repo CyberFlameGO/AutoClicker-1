@@ -1,16 +1,9 @@
 package autoclicker;
 
-import gui.Hotkey.Modifier;
-
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-
 import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
-import com.sun.jna.platform.KeyboardUtils;
 
 /**
  * Class represents the actual autoclicker.
