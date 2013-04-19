@@ -1,7 +1,7 @@
 package gui;
 
 import gui.Hotkey.Modifier;
-import gui.Hotkey.NumKey;
+import gui.Hotkey.Numkey;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,60 +13,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import com.sun.jna.platform.KeyboardUtils;
-
 public class HotkeyPanel extends JPanel {
 	
 	private JLabel hotkeyLabel;
 	private JComboBox modifierComboBox, numberComboBox;
 	private JCheckBox ignoreDelayCheckBox;
 	
-	public HotkeyPanel() {
-		initThread();
+	private Controller controller;
+	
+	public HotkeyPanel(Controller controller) {
+		this.controller = controller;
+	
 		initComponents();
 		initListeners();
-	}
-	
-	private void initThread() {
-		Thread t = new Thread() {
-			boolean pressed;
-			
-			@Override
-			public void run() {
-				while (true) {
-					
-//					if (KeyboardUtils.isPressed(modifier.keycode) && KeyboardUtils.isPressed(numKey.keycode) && !pressed) {
-//						pressed = true;
-						//if we are running, signal we want to stop
-//						if (autoClicker.isRunning()) {
-//							autoClicker.stop();
-//						} else if (countingDown) {
-//							//if we are counting down, stop countdown
-//							stopCountdown();
-//						} else {
-//							//else we want to start new clicking
-//							if (ignoreDelayCheckBox.isSelected()) {
-//								//if ignore is deselected, we start
-//								startAutoclick();
-//							} else {
-//								
-//							}
-//						}
-//					} else {
-//						pressed = false;
-//					}
-					
-					try {
-						//sleep for a bit
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						//ignore
-					}
-				}
-			}
-		};
-		
-		t.start();
 	}
 	
 	private void initComponents() {
@@ -74,7 +33,7 @@ public class HotkeyPanel extends JPanel {
 
 		hotkeyLabel = new JLabel("Hotkey");
 		modifierComboBox = new JComboBox(Hotkey.Modifier.values());
-		numberComboBox = new JComboBox(Hotkey.NumKey.values());
+		numberComboBox = new JComboBox(Hotkey.Numkey.values());
 		ignoreDelayCheckBox = new JCheckBox("<html>Ignore<br>start delay</html>", false);
 
 		modifierComboBox.setSelectedIndex(0);
@@ -91,15 +50,13 @@ public class HotkeyPanel extends JPanel {
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object o = e.getSource();
+				//just set all three variables at once, is more efficient than if-else chain
 				
-				if (o == modifierComboBox) {
-					//modifier = ((Modifier) modifierComboBox.getSelectedItem());
-				} else if (o == numberComboBox) {
-					//numKey = ((NumKey) numberComboBox.getSelectedItem());
-				} else if (o == ignoreDelayCheckBox) {
-					//autoClicker.setHotkeyIgnoreDelay(ignoreDelayCheckBox.isSelected());
-				}
+				Modifier modifier = ((Modifier) modifierComboBox.getSelectedItem());
+				Numkey numKey = ((Numkey) numberComboBox.getSelectedItem());
+				
+				controller.setHotkeyCombination(modifier, numKey);
+				controller.setHotkeyIgnoreDelay(ignoreDelayCheckBox.isSelected());
 			}
 		};
 		

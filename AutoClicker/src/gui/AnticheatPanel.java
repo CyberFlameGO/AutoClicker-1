@@ -19,12 +19,16 @@ import javax.swing.event.ChangeListener;
 import autoclicker.AutoClicker;
 
 public class AnticheatPanel extends JPanel {
+	
 	private JCheckBox anticheatEnabled;
 	private JRadioButton anticheatDefault, anticheatAdvanced;
 	private JLabel spreadLabel, variationLabel;
 	private JSlider spreadSlider, variationSlider;
 	
-	public AnticheatPanel() {
+	private Controller controller;
+	
+	public AnticheatPanel(Controller controller) {
+		this.controller = controller;
 		initComponents();
 		initListeners();
 	}
@@ -95,7 +99,7 @@ public class AnticheatPanel extends JPanel {
 				variationSlider.setEnabled(sliderEnabled);
 
 
-				//autoClicker.setAnticheatDetection(optionEnabled);
+				controller.setAnticheatEnabled(optionEnabled);
 			}
 		});
 
@@ -103,15 +107,14 @@ public class AnticheatPanel extends JPanel {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				boolean selected = anticheatDefault.isSelected();
-
+				
 				if (selected) {
 					variationSlider.setValue(variationSlider.getMaximum() / 2);
 					spreadSlider.setValue(spreadSlider.getMaximum() / 2);
-					//autoClicker.setAnticheatDefault();
-				} else {
-					//autoClicker.setAnticheatSpread(spreadSlider.getValue());
-					//autoClicker.setAnticheatVariation(variationSlider.getValue());
 				}
+				
+				//send data to controller
+				controller.setAnticheatValues(spreadSlider.getValue(), variationSlider.getValue());
 
 				spreadLabel.setEnabled(!selected);
 				variationLabel.setEnabled(!selected);

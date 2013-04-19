@@ -165,6 +165,8 @@ public class AutoClicker {
 						//ignore
 					}
 				}
+				
+				System.out.println("key pressed finished running");
 			}
 		};
 		

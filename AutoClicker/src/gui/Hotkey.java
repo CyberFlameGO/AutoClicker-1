@@ -33,7 +33,7 @@ public final class Hotkey {
 		}
 	}
 	
-	public enum NumKey {
+	public enum Numkey {
 		one		(KeyEvent.VK_1, "1"),
 		two		(KeyEvent.VK_2, "2"),
 		three	(KeyEvent.VK_3, "3"),
@@ -48,7 +48,7 @@ public final class Hotkey {
 		public final int keycode;
 		public final String toString;
 		
-		NumKey(int keycode, String toString) {
+		Numkey(int keycode, String toString) {
 			this.keycode 	= keycode;
 			this.toString 	= toString;
 		}

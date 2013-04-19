@@ -1,7 +1,7 @@
 package gui;
 
 import gui.Hotkey.Modifier;
-import gui.Hotkey.NumKey;
+import gui.Hotkey.Numkey;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -39,7 +39,7 @@ import com.sun.jna.platform.KeyboardUtils;
 import autoclicker.AutoClicker;
 
 
-public class GUI extends JFrame{
+public class MainFrame extends JFrame{
 
 	//panels
 	private DelayPanel delayPanel;
@@ -50,18 +50,19 @@ public class GUI extends JFrame{
 	private InfoPanel infoPanel;
 
 	//AutoClicker object
-	private AutoClicker autoClicker;
 	private boolean countingDown;
 	
 	//hotkey
 	private Modifier modifier = Modifier.values()[0];
-	private NumKey numKey = NumKey.values()[0];
+	private Numkey numKey = Numkey.values()[0];
+	
+	Controller controller;
 
-	public GUI(AutoClicker autoClicker) {
+	public MainFrame() {
 		super("Autoclicker");
 		setNativeLAndF();
 
-		this.autoClicker = autoClicker;
+		controller = new Controller();
 		
 		initPanels();
 		setupLayout();
@@ -69,8 +70,8 @@ public class GUI extends JFrame{
 	}
 	
 	private void initPanels() {
-		hotkeyPanel = new HotkeyPanel();
-		anticheatPanel = new AnticheatPanel();
+		hotkeyPanel = new HotkeyPanel(controller);
+		anticheatPanel = new AnticheatPanel(controller);
 		delayPanel = new DelayPanel();
 		durationPanel = new DurationPanel();
 		runPanel = new RunPanel();
