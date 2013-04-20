@@ -1,5 +1,7 @@
 package autoclicker;
 
+import gui.Hotkey;
+
 import com.sun.jna.platform.KeyboardUtils;
 
 /**
@@ -8,15 +10,15 @@ import com.sun.jna.platform.KeyboardUtils;
  * @author Troy Shaw
  */
 public class HotkeyNotifier {
-
 	//sleep time before we poll again
 	private static long SLEEP_TIME = 20;
 	
+	//thread the polling is done on
 	private Thread mainThread;
-	
-	//the keycodes of the keys we are checking for
-	private int controlKey, numericKey;
 
+	//the listener object that is sent the message when both keys are held
+	private HotkeyListener hotkeyListener;
+	
 	//true if we have registered a dual-press and have already sent a message and there are still 2 keys being held
 	private boolean pressed;
 
@@ -38,49 +40,30 @@ public class HotkeyNotifier {
 
 		mainThread.start();
 	}
+	
+	/**
+	 * Registers the given HotkeyListener with this class. The given object will be notified when a combination is pressed.
+	 * @param hotkeyListener
+	 */
+	public void registerHotkeyListener(HotkeyListener hotkeyListener) {
+		this.hotkeyListener = hotkeyListener;
+	}
 
 	/**
 	 * Method checks the system for currently held keys. 
 	 * If the state goes from not having both keys held to having both keys held an event is sent to the system.
 	 */
 	private void monitorKeys() {
-		boolean controlHeld = KeyboardUtils.isPressed(controlKey);
-		boolean numericHeld = KeyboardUtils.isPressed(numericKey);
+		boolean modifierHeld = KeyboardUtils.isPressed(Hotkey.MODIFIER.keycode);
+		boolean numericHeld = KeyboardUtils.isPressed(Hotkey.NUMBER.keycode);
 		
 		if (pressed) {
-			if (!controlHeld || !numericHeld) pressed = false;
+			if (!modifierHeld || !numericHeld) pressed = false;
 		} else {
-			if (controlHeld && numericHeld) {
+			if (modifierHeld && numericHeld) {
 				pressed = true;
-				//notify listener object here
-				System.out.println("pressed");
+				if (hotkeyListener != null) hotkeyListener.hotkeyPressed();
 			}
 		}
-	}
-
-	/**
-	 * Updates the numerical key that must be pressed.
-	 * @param numericKey
-	 */
-	public void setNumericKey(int numericKey) {
-		this.numericKey = numericKey;
-	}
-
-	/**
-	 * Updates the control key that must be pressed.
-	 * @param controlKey
-	 */
-	public void setControlKey(int controlKey) {
-		this.controlKey = controlKey;
-	}
-
-	/**
-	 * Sets both keys which must be pressed to generate an event.
-	 * @param controlKey
-	 * @param numericKey
-	 */
-	public void setKeys(int controlKey, int numericKey) {
-		this.controlKey = controlKey;
-		this.numericKey = numericKey;
 	}
 }

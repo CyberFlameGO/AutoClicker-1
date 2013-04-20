@@ -10,9 +10,21 @@ import java.awt.event.KeyEvent;
  */
 public final class Hotkey {
 
+	/**
+	 * The modifier our system is currently using. Should only be changed from the GUI.
+	 */
+	public static Modifier MODIFIER = Hotkey.Modifier.ctrl;
+	
+	/**
+	 * The number key our system is currently using. Should only be changed from the GUI.
+	 */
+	public static Numkey NUMBER = Hotkey.Numkey.one;
+	
 	private Hotkey() {
 		//stop instantiation
 	}
+	
+	
 	
 	public enum Modifier {
 		ctrl	(KeyEvent.VK_CONTROL, 	"Ctrl"), 
