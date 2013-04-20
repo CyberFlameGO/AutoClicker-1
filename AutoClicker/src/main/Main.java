@@ -3,7 +3,7 @@ package main;
 import java.awt.event.KeyEvent;
 
 import autoclicker.HotkeyNotifier;
-import gui.MainFrame;
+
 
 public class Main {
 	public static void main(String[] args) {
