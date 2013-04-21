@@ -22,10 +22,7 @@ public class AutoClicker {
 	public final static int MAX_SPREAD = 100;
 	public final static int MAX_VARIATION = 100;
 	
-	//delay when user clicks "Start!" or pushes hotkey without ignoreStartDelay enabled
-	private int startDelay;
-
-	//time between clicks
+	//time between clicks in milliseconds
 	private long clickDelay;
 
 	//anticheat detection variables
@@ -39,8 +36,6 @@ public class AutoClicker {
 
 	//cheat detection option, default or advanced
 	private AnticheatOption anticheatOption;
-
-
 
 	//click duration... either forever, numClicks or timeDuration
 	private ClickDuration clickDuration;
@@ -58,7 +53,6 @@ public class AutoClicker {
 	 */
 	public AutoClicker() {
 		initialiseVariables();
-		
 	}
 	
 	/**
@@ -66,9 +60,8 @@ public class AutoClicker {
 	 */
 	private void initialiseVariables() {
 		clickDelay = DEFAULT_CLICK_DELAY;
-		startDelay = 0;
-		variation = 50;
-		spread = 50;
+		variation = DEFAULT_VARIATION;
+		spread = DEFAULT_SPREAD;
 		ignoreStartDelay = false;
 		anticheatDetection = false;
 		anticheatOption = AnticheatOption.Default;
@@ -165,10 +158,6 @@ public class AutoClicker {
 		};
 		
 		//currentThread.start();
-	}
-	
-	public void setStartDelay(int startDelay) {
-		this.startDelay = startDelay;
 	}
 
 	//some enums

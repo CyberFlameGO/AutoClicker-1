@@ -171,21 +171,32 @@ public class Controller implements HotkeyListener {
 	 */
 	private enum State {clicking, countingDown, stopped}
 
+	/**
+	 * Class needed because of Swing's threading policy. Handles the countdown process.
+	 *
+	 * @author Troy Shaw
+	 */
 	private class CountdownWorker extends SwingWorker<Void, String> {
 		@Override
 		protected Void doInBackground() {
-			for (int i = 0; i < startDelay * 10; i++) {
+			long start = System.currentTimeMillis();
+			//create a copy since the user can change whenever they want
+			int seconds = startDelay;	
+			
+			while (System.currentTimeMillis() - start < seconds * 1000) {
 				if (state == gui.Controller.State.stopped) {
 					publish("Clicking Stopped");
 					return null;
 				}
+				
 				try {
+					//arbitrary resolution, but gives reasonable control for user
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					//ignore
 				}
 
-				int val = (startDelay * 1000  - i * 100) / 999;
+				long val = (seconds * 1000  - (System.currentTimeMillis() - start)) / 1000 + 1;
 
 				publish("Counting down: " + val);
 			}
@@ -199,7 +210,7 @@ public class Controller implements HotkeyListener {
 
 		@Override
 		protected void done() {		    	
-			infoPanel.setInfo("Completed");
+			beginClicking();
 		}
 
 		@Override

@@ -17,6 +17,8 @@ import javax.swing.border.TitledBorder;
  * Panel contains the current keys used for the stop/ start hotkey combination.
  * <p>
  * The dropdown box also lets the user change the values at any time.
+ * <P>
+ * There is also a checkbox to let the user ignore the delay timeout when using hotkeys.
  *
  * @author Troy Shaw
  */
