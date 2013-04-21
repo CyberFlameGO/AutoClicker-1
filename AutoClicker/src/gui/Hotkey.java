@@ -24,8 +24,6 @@ public final class Hotkey {
 		//stop instantiation
 	}
 	
-	
-	
 	public enum Modifier {
 		ctrl	(KeyEvent.VK_CONTROL, 	"Ctrl"), 
 		shift	(KeyEvent.VK_SHIFT, 	"Shift"), 

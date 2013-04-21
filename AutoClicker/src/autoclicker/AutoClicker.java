@@ -3,8 +3,10 @@ package autoclicker;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 /**
  * Class represents the actual autoclicker.
@@ -43,9 +45,9 @@ public class AutoClicker {
 	//the robot that will perform clicking
 	private Robot robot;
 	
-	private Thread currentThread;
+	private SwingWorker clickerWorker;
 	
-	private boolean manualStop, isRunning;
+	private boolean isClicking;
 	
 	
 	/**
@@ -71,19 +73,20 @@ public class AutoClicker {
 			robot = new Robot();
 		} catch (AWTException e) {
 			String title = "Error";
-			String message = "<html>Error message 1<br>Cannot instantiate java.awt.Robot" +
+			String message = "<html>Error message 1<br><br>Cannot instantiate java.awt.Robot." +
 					"<br>Please give Java sufficient permissions." + 
 					"<br><br>Program will now exit.</html>";
 			JOptionPane.showMessageDialog(null,  message, title, JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
+		
+		clickerWorker = new ClickerWorker();
+		clickerWorker.execute();
 	}
 
-
 	//public methods to be called from GUI
-
 	public boolean isRunning() {
-		return isRunning;
+		return isClicking;
 	}
 
 	public void setHotkeyIgnoreDelay(boolean ignoreStartDelay) {
@@ -113,14 +116,12 @@ public class AutoClicker {
 
 
 	//delay between click panel
-
 	public void setClickDelay(long clickDelay) {
 		if (clickDelay < 0) throw new IllegalArgumentException();
 		this.clickDelay = clickDelay;
 	}
 
 	//click duration option panel
-
 	public void setClickDuration(ClickDuration clickDuration) {
 		if (clickDuration == null) throw new NullPointerException();
 		this.clickDuration = clickDuration;
@@ -136,28 +137,11 @@ public class AutoClicker {
 	}
 
 	public void stopClicking() {
-		manualStop = true;		
+		isClicking = true;		
 	}
 
 	private void run() {
-		manualStop = false;
-		
-		currentThread = new Thread() {
-			@Override
-			public void run() {
-				while (!manualStop) {
-					robot.mousePress(InputEvent.BUTTON1_MASK);
-					robot.mouseRelease(InputEvent.BUTTON1_MASK);
-					try {
-						Thread.sleep(clickDelay);
-					} catch (InterruptedException e) {
-						//ignore
-					}
-				}
-			}
-		};
-		
-		//currentThread.start();
+		isClicking = false;
 	}
 
 	//some enums
@@ -173,4 +157,48 @@ public class AutoClicker {
 		TimeDuration
 	}
 
+	/**
+	 * Class needed because of Swing's threading policy. Handles the clicking.
+	 * <br>
+	 * This class is only instantiated once and loops continously.
+	 * <br>
+	 * It checks if we're clicking/ not clicking and either clicks or loops respectively.
+	 *
+	 * @author Troy Shaw
+	 */
+	private class ClickerWorker extends SwingWorker<Void, String> {
+		@Override
+		protected Void doInBackground() {			
+			while (true) {
+				if (isClicking) {
+					//we are stopped, so just wait a little bit and continue
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						//ignore
+					}
+				} else {
+					//we are clicking, so click then wait the proper amount
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					
+					try {
+						Thread.sleep(clickDelay);
+					} catch (InterruptedException e) {
+						//ignore
+					}
+					
+					process(null);
+				}
+			}
+		}
+
+		@Override
+		// Can safely update the GUI from this method.
+		protected void process(List<String> chunks) {
+			//we need to increment our click value, and update the amount of time we've clicked for
+
+			//infoPanel.setInfo(mostRecentValue);
+		}
+	};
 }
