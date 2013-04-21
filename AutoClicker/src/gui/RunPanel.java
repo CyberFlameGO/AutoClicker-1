@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class RunPanel extends JPanel {
 	
@@ -17,8 +19,13 @@ public class RunPanel extends JPanel {
 	private JLabel startDelayLabel;
 	private JSpinner delaySpinner;
 	
-	public RunPanel() {
+	private Controller controller;
+	
+	public RunPanel(Controller controller) {
+		this.controller = controller;
+	
 		initComponents();
+		initListeners();
 	}
 	
 	private void initComponents() {
@@ -47,14 +54,21 @@ public class RunPanel extends JPanel {
 				Object o = e.getSource();
 				
 				if (o == startButton) {
-					//start();
+					controller.startPressed();
 				} else if (o == stopButton) {
-					//autoClicker.stop();
+					controller.stopPressed();
 				}
 			}
 		};
 		
 		startButton.addActionListener(al);
 		stopButton.addActionListener(al);
+		
+		delaySpinner.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				controller.setDelayTime((Integer) delaySpinner.getValue());
+			}
+		});
 	}
 }

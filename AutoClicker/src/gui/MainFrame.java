@@ -4,39 +4,13 @@ import gui.Hotkey.Modifier;
 import gui.Hotkey.Numkey;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import com.sun.jna.platform.KeyboardUtils;
-
-import autoclicker.AutoClicker;
 
 
 public class MainFrame extends JFrame{
@@ -74,8 +48,10 @@ public class MainFrame extends JFrame{
 		anticheatPanel = new AnticheatPanel(controller);
 		delayPanel = new DelayPanel();
 		durationPanel = new DurationPanel();
-		runPanel = new RunPanel();
+		runPanel = new RunPanel(controller);
 		infoPanel = new InfoPanel();
+		
+		controller.registerInfoPanel(infoPanel);
 	}
 	
 	private void setupLayout() {

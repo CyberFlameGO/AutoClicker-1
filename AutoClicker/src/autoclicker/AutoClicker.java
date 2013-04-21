@@ -1,16 +1,10 @@
 package autoclicker;
 
-import gui.Hotkey.Modifier;
-
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
-import com.sun.jna.platform.KeyboardUtils;
 
 /**
  * Class represents the actual autoclicker.
@@ -141,13 +135,15 @@ public class AutoClicker {
 
 	//run panel
 
-	public void start() {
+	/**
+	 * Starts clicking immediately until stopClicking() is called.
+	 */
+	public void beginClicking() {
 		run();
 	}
 
-	public void stop() {
-		manualStop = true;
-		System.out.println("Stopped");		
+	public void stopClicking() {
+		manualStop = true;		
 	}
 
 	private void run() {
