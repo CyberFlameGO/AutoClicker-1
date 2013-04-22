@@ -1,15 +1,11 @@
 package gui;
 
-import gui.Hotkey.Modifier;
-import gui.Hotkey.Numkey;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 
@@ -23,13 +19,6 @@ public class MainFrame extends JFrame{
 	private RunPanel runPanel;
 	private InfoPanel infoPanel;
 
-	//AutoClicker object
-	private boolean countingDown;
-	
-	//hotkey
-	private Modifier modifier = Modifier.values()[0];
-	private Numkey numKey = Numkey.values()[0];
-	
 	Controller controller;
 
 	public MainFrame() {
@@ -52,6 +41,7 @@ public class MainFrame extends JFrame{
 		infoPanel = new InfoPanel();
 		
 		controller.registerInfoPanel(infoPanel);
+		controller.registerDelayPanel(delayPanel);
 	}
 	
 	private void setupLayout() {
@@ -105,19 +95,5 @@ public class MainFrame extends JFrame{
 	@SuppressWarnings("unused")
 	private void submitTextfieldValues() {
 
-	}
-
-	private boolean validTextField(JTextField field) {
-		int value;
-		
-		try {
-			value = Integer.parseInt(field.getText());
-			if (value < 0) return false;
-		} catch (NumberFormatException e) {
-			return false;
-		}
-
-		field.setText(Integer.toString(value));
-		return true;
 	}
 }

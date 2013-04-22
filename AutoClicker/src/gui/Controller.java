@@ -29,9 +29,10 @@ public class Controller implements HotkeyListener {
 	private HotkeyNotifier hotkeyNotifier;
 
 	private InfoPanel infoPanel;
+	private DelayPanel delayPanel;
 
 	public Controller() {
-		autoClicker = new AutoClicker();
+		autoClicker = new AutoClicker(this);
 		hotkeyNotifier = new HotkeyNotifier();
 		hotkeyNotifier.registerHotkeyListener(this);
 	}
@@ -40,9 +41,14 @@ public class Controller implements HotkeyListener {
 		this.infoPanel = infoPanel;
 	}
 
+	public void registerDelayPanel(DelayPanel delayPanel) {
+		this.delayPanel = delayPanel;
+	}
+
 	@Override
 	public void hotkeyPressed() {
 		if (state == State.stopped) {
+			if (!testAndSetDelayBetweenClicks()) return;
 			if (ignoreHotkeyDelay) {
 				//ignoring delay, so just start instantly
 				beginClicking();
@@ -66,6 +72,8 @@ public class Controller implements HotkeyListener {
 	public void startPressed() {
 		//only do something if we're currently stopped
 		if (state == State.stopped) {
+			if (!testAndSetDelayBetweenClicks()) return;
+			
 			if (startDelay == 0) beginClicking();
 			else beginCountdown();
 		}
@@ -118,9 +126,39 @@ public class Controller implements HotkeyListener {
 	}
 
 	public void setDelayBetweenClicks(long delayMilli) {
-
+		autoClicker.setClickDelay(delayMilli);
 	}
 
+	/**
+	 * Checks if the value in the field is valid, and if so sets it and returns true.
+	 * Returns false if it's invalid.
+	 * 
+	 * If an invalid value is present, sets the state to State.stopped and displays an error message.
+	 * 
+	 * @return true if valid, false otherwise
+	 */
+	private boolean testAndSetDelayBetweenClicks() {
+		int delayBetween = delayPanel.getDelayBetweenClicks();
+
+		if (delayBetween == -1) {
+			//was invalid so display to user and return
+			infoPanel.setInfo("Invalid delay between clicks");
+			state = State.stopped;
+			return false;
+		} else {
+			//was valid so set the var
+			setDelayBetweenClicks(delayBetween);
+
+			return true;
+		}
+	}
+
+	public void setClicks(int clicks) {
+		//TODO fix this. 
+		//This method is being called before the infoPanel has been registered with this panel.
+		//need to fix the order things are instantiated in.
+		if (infoPanel != null) infoPanel.setClicks(clicks);
+	}
 
 	/**
 	 * Begins autoclicking immediately. This should be called after any countdowns, etc.
@@ -138,29 +176,7 @@ public class Controller implements HotkeyListener {
 	private void beginCountdown() {
 		state = State.countingDown;
 
-//		SwingUtilities.invokeLater(new Thread() {
-//			@Override
-//			public void run() {
-//				try {
-//					for (int i = 0; i < startDelay * 10; i++) {
-//						if (state == gui.Controller.State.stopped) {
-//							infoPanel.setInfo("Clicking Stopped");
-//							return;
-//						}
-//						Thread.sleep(100);
-//
-//						int val = (startDelay * 1000  - i * 100) / 999;
-//
-//						infoPanel.setInfo("Counting down: " + val);
-//					}
-//				} catch (InterruptedException e) {
-//					//ignore
-//				}
-//				beginClicking();
-//			}
-//		});
 		CountdownWorker a = new CountdownWorker();
-		
 		a.execute();
 	}
 
@@ -182,13 +198,13 @@ public class Controller implements HotkeyListener {
 			long start = System.currentTimeMillis();
 			//create a copy since the user can change whenever they want
 			int seconds = startDelay;	
-			
+
 			while (System.currentTimeMillis() - start < seconds * 1000) {
 				if (state == gui.Controller.State.stopped) {
 					publish("Clicking Stopped");
 					return null;
 				}
-				
+
 				try {
 					//arbitrary resolution, but gives reasonable control for user
 					Thread.sleep(100);
@@ -204,7 +220,7 @@ public class Controller implements HotkeyListener {
 			// The type we pass to publish() is determined
 			// by the second template parameter.
 			publish();
-			
+
 			return null;
 		}
 

@@ -34,4 +34,8 @@ public class InfoPanel extends JPanel {
 		if (info == null) throw new NullPointerException();
 		currentStatusLabel.setText(info);
 	}
+	
+	public void setClicks(int clicks) {
+		currentClickLabel.setText(Integer.toString(clicks));
+	}
 }

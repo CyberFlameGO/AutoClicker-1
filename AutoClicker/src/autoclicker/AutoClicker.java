@@ -1,5 +1,7 @@
 package autoclicker;
 
+import gui.Controller;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -23,6 +25,8 @@ public class AutoClicker {
 	
 	public final static int MAX_SPREAD = 100;
 	public final static int MAX_VARIATION = 100;
+	
+	private Controller controller;
 	
 	//time between clicks in milliseconds
 	private long clickDelay;
@@ -53,7 +57,9 @@ public class AutoClicker {
 	/**
 	 * Instantiates a new <code>AutoClicker</code> with the default values.
 	 */
-	public AutoClicker() {
+	public AutoClicker(Controller controller) {
+		this.controller = controller;
+		
 		initialiseVariables();
 	}
 	
@@ -137,11 +143,11 @@ public class AutoClicker {
 	}
 
 	public void stopClicking() {
-		isClicking = true;		
+		isClicking = false;		
 	}
 
 	private void run() {
-		isClicking = false;
+		isClicking = true;
 	}
 
 	//some enums
@@ -166,39 +172,46 @@ public class AutoClicker {
 	 *
 	 * @author Troy Shaw
 	 */
-	private class ClickerWorker extends SwingWorker<Void, String> {
+	private class ClickerWorker extends SwingWorker<Void, Integer> {
 		@Override
-		protected Void doInBackground() {			
+		protected Void doInBackground() {
+			int clicks = 0;
+			
 			while (true) {
-				if (isClicking) {
+				if (!isClicking) {
 					//we are stopped, so just wait a little bit and continue
 					try {
 						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						//ignore
 					}
+					
+					clicks = 0;
 				} else {
 					//we are clicking, so click then wait the proper amount
 					robot.mousePress(InputEvent.BUTTON1_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					clicks++;
 					
 					try {
 						Thread.sleep(clickDelay);
 					} catch (InterruptedException e) {
 						//ignore
 					}
-					
-					process(null);
 				}
+				
+				//send the amount of clicks we've done
+				publish(clicks);
 			}
 		}
 
 		@Override
 		// Can safely update the GUI from this method.
-		protected void process(List<String> chunks) {
+		protected void process(List<Integer> chunks) {
 			//we need to increment our click value, and update the amount of time we've clicked for
-
-			//infoPanel.setInfo(mostRecentValue);
+			int clicks = chunks.get(chunks.size() - 1);
+			
+			controller.setClicks(clicks);
 		}
 	};
 }

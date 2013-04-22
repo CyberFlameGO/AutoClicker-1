@@ -43,7 +43,6 @@ public class DelayPanel extends JPanel {
 		milliTextbox.setText("1000");
 
 		
-
 		add(delayMilliLabel);
 		add(milliTextbox);
 	}
@@ -53,7 +52,7 @@ public class DelayPanel extends JPanel {
 		milliTextbox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				System.out.println("done");
 			}
 		});
 		
@@ -74,6 +73,30 @@ public class DelayPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Returns the current value the text-field is set to.
+	 * If the value is invalid, the textbox is set to 1000 and -1 is returned.
+	 * @return the value, or -1 if anything invalid is present
+	 */
+	public int getDelayBetweenClicks() {
+		int val = 0;
+		try {
+			val = Integer.parseInt(milliTextbox.getText());
+			
+			if (val < 0) {
+				milliTextbox.setText("1000");
+				val = 1000;
+				return -1;
+			}
+		} catch (NumberFormatException e) {
+			milliTextbox.setText("1000");
+			//text somehow wasn't a number, so return -1
+			return -1;
+		}
+		
+		return val;
+	}
+	
 	private class UpperCaseDocument extends PlainDocument {
 
 		@Override
@@ -94,7 +117,5 @@ public class DelayPanel extends JPanel {
 			System.out.println(str.length());
 			super.insertString(offs, bf.toString(), a);
 		}
-		
-		
 	}
 }
