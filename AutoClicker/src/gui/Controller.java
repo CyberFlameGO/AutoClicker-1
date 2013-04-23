@@ -88,6 +88,7 @@ public class Controller implements HotkeyListener {
 	public void stopPressed() {
 		state = State.stopped;
 		infoPanel.setInfo("Clicking Stopped");
+		infoPanel.setClicks(0);
 		autoClicker.stopClicking();
 	}
 
