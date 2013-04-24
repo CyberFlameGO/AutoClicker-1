@@ -1,9 +1,7 @@
 package gui;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import autoclicker.AutoClicker;
@@ -73,7 +71,7 @@ public class Controller implements HotkeyListener {
 		//only do something if we're currently stopped
 		if (state == State.stopped) {
 			if (!testAndSetDelayBetweenClicks()) return;
-			
+
 			if (startDelay == 0) beginClicking();
 			else beginCountdown();
 		}
@@ -159,6 +157,22 @@ public class Controller implements HotkeyListener {
 		//This method is being called before the infoPanel has been registered with this panel.
 		//need to fix the order things are instantiated in.
 		if (infoPanel != null) infoPanel.setClicks(clicks);
+	}
+
+	public void setTime(long millis) {
+		//TODO fix this. 
+		//This method is being called before the infoPanel has been registered with this panel.
+		//need to fix the order things are instantiated in.
+		String time = "";
+		
+		long seconds = millis / 1000;
+		long oneths = (millis - seconds * 1000) / 100;
+		long tenths = (millis - seconds * 1000 - oneths * 100) / 10;
+		long hundreths = (millis - seconds * 1000 - oneths * 100 - tenths * 10);
+		
+		time = seconds + "." + oneths + tenths + hundreths;
+		
+		if (infoPanel != null) infoPanel.setTime(time);
 	}
 
 	/**

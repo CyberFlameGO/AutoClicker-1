@@ -38,4 +38,8 @@ public class InfoPanel extends JPanel {
 	public void setClicks(int clicks) {
 		currentClickLabel.setText(Integer.toString(clicks));
 	}
+	
+	public void setTime(String time) {
+		currentTimeLabel.setText(time);
+	}
 }

@@ -50,6 +50,7 @@ public class AutoClicker {
 	private Robot robot;
 	
 	private SwingWorker clickerWorker;
+	private SwingWorker timerWorker;
 	
 	private boolean isClicking;
 	
@@ -88,6 +89,9 @@ public class AutoClicker {
 		
 		clickerWorker = new ClickerWorker();
 		clickerWorker.execute();
+		
+		timerWorker = new TimerWorker();
+		timerWorker.execute();
 	}
 
 	//public methods to be called from GUI
@@ -193,11 +197,31 @@ public class AutoClicker {
 					robot.mouseRelease(InputEvent.BUTTON1_MASK);
 					clicks++;
 					
-					try {
-						Thread.sleep(clickDelay);
-					} catch (InterruptedException e) {
-						//ignore
+					
+					for (int i = 0; i < 10; i++) {
+						try {
+							Thread.sleep(clickDelay / 10);
+						} catch (InterruptedException e) {
+							//ignore
+						}
+						
+						if (!isClicking) {
+							//they cancelled during the wait
+							clicks = 0;
+							break;
+						}
 					}
+					
+					if (isClicking) {
+						//make up for possible rounding errors due to int arithmetic
+						long time = clickDelay - (clickDelay / 10 * 10);
+						try {
+							Thread.sleep(time);
+						} catch (InterruptedException e) {
+							//ignore
+						}
+					}
+				
 				}
 				
 				//send the amount of clicks we've done
@@ -212,6 +236,55 @@ public class AutoClicker {
 			int clicks = chunks.get(chunks.size() - 1);
 			
 			controller.setClicks(clicks);
+		}
+	};
+	
+	/**
+	 * Temporary fix until I think of a better way to constantly update time panel.
+	 *
+	 * @author Troy Shaw
+	 */
+	private class TimerWorker extends SwingWorker<Void, Long> {
+		private static final long SLEEP_TIME = 11;
+		
+		@Override
+		protected Void doInBackground() {
+			long lastState = System.currentTimeMillis();
+			long difference;
+			
+			while (true) {
+				if (!isClicking) {
+					//we are stopped, so just wait a little bit and continue
+					lastState = System.currentTimeMillis();
+					difference = 0;
+					try {
+						Thread.sleep(SLEEP_TIME);
+					} catch (InterruptedException e) {
+						//ignore
+					}
+				} else {
+					//we are clicking, so update the time
+					difference = System.currentTimeMillis() - lastState;
+					
+					try {
+						Thread.sleep(SLEEP_TIME);
+					} catch (InterruptedException e) {
+						//ignore
+					}
+				}
+				
+				//send the amount of clicks we've done
+				publish(difference);
+			}
+		}
+
+		@Override
+		// Can safely update the GUI from this method.
+		protected void process(List<Long> chunks) {
+			//we need to increment our click value, and update the amount of time we've clicked for
+			long millis = chunks.get(chunks.size() - 1);
+			
+			controller.setTime(millis);
 		}
 	};
 }
