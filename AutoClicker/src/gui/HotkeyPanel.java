@@ -44,8 +44,9 @@ public class HotkeyPanel extends JPanel {
 		modifierComboBox = new JComboBox(Hotkey.Modifier.values());
 		numberComboBox = new JComboBox(Hotkey.Numkey.values());
 		//use html as a workaround to display a newline
-		ignoreDelayCheckBox = new JCheckBox("<html>Ignore<br>start delay</html>", false);
-
+		//ignoreDelayCheckBox = new JCheckBox("<html>Ignore<br>start delay</html>", false);
+		ignoreDelayCheckBox = new JCheckBox("Ignore start delay", false);
+		
 		modifierComboBox.setSelectedItem(Hotkey.MODIFIER);
 		numberComboBox.setSelectedItem(Hotkey.NUMBER);
 

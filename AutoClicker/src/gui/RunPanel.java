@@ -14,20 +14,20 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class RunPanel extends JPanel {
-	
+
 	private JButton startButton, stopButton;
 	private JLabel startDelayLabel;
 	private JSpinner delaySpinner;
-	
+
 	private Controller controller;
-	
+
 	public RunPanel(Controller controller) {
 		this.controller = controller;
-	
+
 		initComponents();
 		initListeners();
 	}
-	
+
 	private void initComponents() {
 		setBorder(new TitledBorder(null, "Run", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
@@ -46,13 +46,13 @@ public class RunPanel extends JPanel {
 		add(stopButton);
 		add(panel);
 	}
-	
+
 	private void initListeners() {
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Object o = e.getSource();
-				
+
 				if (o == startButton) {
 					controller.startPressed();
 				} else if (o == stopButton) {
@@ -60,15 +60,29 @@ public class RunPanel extends JPanel {
 				}
 			}
 		};
-		
+
 		startButton.addActionListener(al);
 		stopButton.addActionListener(al);
-		
+
 		delaySpinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				controller.setDelayTime((Integer) delaySpinner.getValue());
 			}
 		});
+	}
+
+	public void enableComponents() {
+		startButton.setEnabled(true);
+		stopButton.setEnabled(false);
+		delaySpinner.setEnabled(true);
+		startDelayLabel.setEnabled(true);
+	}
+
+	public void disableComponents() {
+		startButton.setEnabled(false);
+		stopButton.setEnabled(true);
+		delaySpinner.setEnabled(false);
+		startDelayLabel.setEnabled(false);
 	}
 }

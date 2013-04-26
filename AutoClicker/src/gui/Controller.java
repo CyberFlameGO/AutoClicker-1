@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.util.List;
 
 import javax.swing.SwingWorker;
@@ -15,9 +17,6 @@ public class Controller implements HotkeyListener {
 	//the current state of the system
 	private volatile State state = State.stopped;
 
-	//anticheat stuff
-	private boolean anticheatEnabled;
-
 	//hotkey stuff
 	private boolean ignoreHotkeyDelay;
 	private int startDelay;
@@ -26,9 +25,13 @@ public class Controller implements HotkeyListener {
 	//hotkey notifier
 	private HotkeyNotifier hotkeyNotifier;
 
+	private HotkeyPanel hotkeyPanel;
 	private InfoPanel infoPanel;
 	private DelayPanel delayPanel;
-
+	private AnticheatPanel anticheatPanel;
+	private RunPanel runPanel;
+	private DurationPanel durationPanel;
+	
 	public Controller() {
 		autoClicker = new AutoClicker(this);
 		hotkeyNotifier = new HotkeyNotifier();
@@ -41,6 +44,22 @@ public class Controller implements HotkeyListener {
 
 	public void registerDelayPanel(DelayPanel delayPanel) {
 		this.delayPanel = delayPanel;
+	}
+	
+	public void registerDurationPanel(DurationPanel durationPanel) {
+		this.durationPanel = durationPanel;
+	}
+	
+	public void registerRunPanel(RunPanel runPanel) {
+		this.runPanel = runPanel;
+	}
+	
+	public void registerAnticheatPanel(AnticheatPanel anticheatPanel) {
+		this.anticheatPanel = anticheatPanel;
+	}
+	
+	public void registerHotkeyPanel(HotkeyPanel hotkeyPanel) {
+		this.hotkeyPanel = hotkeyPanel;
 	}
 
 	@Override
@@ -87,6 +106,7 @@ public class Controller implements HotkeyListener {
 		state = State.stopped;
 		infoPanel.setInfo("Clicking Stopped");
 		infoPanel.setClicks(0);
+		enableComponents();
 		autoClicker.stopClicking();
 	}
 
@@ -111,7 +131,7 @@ public class Controller implements HotkeyListener {
 	 * @param enabled true if enabled, false otherwise
 	 */
 	public void setAnticheatEnabled(boolean enabled) {
-		anticheatEnabled = enabled;
+		//TODO make it interact with AutoClicker object
 	}
 
 	/**
@@ -174,13 +194,49 @@ public class Controller implements HotkeyListener {
 		
 		if (infoPanel != null) infoPanel.setTime(time);
 	}
+	
+	/**
+	 * Enables various components so the user can interact again after finishing a clicking session.
+	 */
+	public void enableComponents() {
+		for (Component c : delayPanel.getComponents()) c.setEnabled(true);
+		setEnabledRecurse(durationPanel, true);
+		setEnabledRecurse(anticheatPanel, true);
+		setEnabledRecurse(hotkeyPanel, true);
+		runPanel.enableComponents();
+	}
+	
+	/**
+	 * Disables various components so the user cannot change settings during a clicking session.
+	 */
+	public void disableComponents() {
+		for (Component c : delayPanel.getComponents()) c.setEnabled(false);
+		setEnabledRecurse(durationPanel, false);
+		setEnabledRecurse(anticheatPanel, false);
+		setEnabledRecurse(hotkeyPanel, false);
+		durationPanel.setEnabled(false);
+		runPanel.disableComponents();
+	}
 
+	/**
+	 * Recursively 
+	 * @param c
+	 */
+	private void setEnabledRecurse(Component component, boolean enabled) {
+		if (component instanceof Container) {
+			Container container = (Container) component;
+			for (Component c : container.getComponents()) setEnabledRecurse(c, enabled);
+		}
+		component.setEnabled(enabled);
+	}
+	
 	/**
 	 * Begins autoclicking immediately. This should be called after any countdowns, etc.
 	 */
 	private void beginClicking() {
 		state = State.clicking;
 		infoPanel.setInfo("Clicking Started");
+		disableComponents();
 
 		autoClicker.beginClicking();
 	}

@@ -42,6 +42,10 @@ public class MainFrame extends JFrame{
 		
 		controller.registerInfoPanel(infoPanel);
 		controller.registerDelayPanel(delayPanel);
+		controller.registerDurationPanel(durationPanel);
+		controller.registerRunPanel(runPanel);
+		controller.registerAnticheatPanel(anticheatPanel);
+		controller.registerHotkeyPanel(hotkeyPanel);
 	}
 	
 	private void setupLayout() {
