@@ -17,9 +17,7 @@ public class AutoClicker {
 
 	private Clicker clicker;
 	
-	//private ClickerWorker clickerWorker;
 	private TimerWorker timerWorker;
-	
 	private ClickerService clickerService;
 	
 	/**
@@ -52,12 +50,12 @@ public class AutoClicker {
 	 * Starts clicking immediately until stopClicking() is called.
 	 */
 	public void beginClicking() {
-		model.setClick(true);
+		model.setIsClicking(true);
 		clickerService.startClicking(model.getClickDelay());
 	}
 
 	public void stopClicking() {
-		model.setClick(false);
+		model.setIsClicking(false);
 		clickerService.stopClicking();
 	}
 }

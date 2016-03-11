@@ -4,9 +4,7 @@ import java.awt.Component;
 
 import autoclicker.AutoClicker;
 import autoclicker.Model;
-import gui.panels.AnticheatPanel;
 import gui.panels.DelayPanel;
-import gui.panels.DurationPanel;
 import gui.panels.HotkeyPanel;
 import gui.panels.InfoPanel;
 import gui.panels.RunPanel;
@@ -21,26 +19,16 @@ public class Controller implements HotkeyListener {
 
 	private volatile State currentState = State.stopped;
 
-	private HotkeyNotifier hotkeyNotifier;
-
 	private HotkeyPanel hotkeyPanel;
 	private InfoPanel infoPanel;
 	private DelayPanel delayPanel;
-	private AnticheatPanel anticheatPanel;
 	private RunPanel runPanel;
-	private DurationPanel durationPanel;
-	
-	private MainFrame mainFrame;
 	
 	public Controller(Model model) {
 		this.model = model;
 		
 		autoClicker = new AutoClicker(model, this);
-		hotkeyNotifier = new HotkeyNotifier(this);
-	}
-
-	public void registerMainFrame(MainFrame mainFrame) {
-		this.mainFrame = mainFrame;
+		new HotkeyNotifier(this);
 	}
 	
 	public void registerInfoPanel(InfoPanel infoPanel) {
@@ -51,16 +39,8 @@ public class Controller implements HotkeyListener {
 		this.delayPanel = delayPanel;
 	}
 	
-	public void registerDurationPanel(DurationPanel durationPanel) {
-		this.durationPanel = durationPanel;
-	}
-	
 	public void registerRunPanel(RunPanel runPanel) {
 		this.runPanel = runPanel;
-	}
-	
-	public void registerAnticheatPanel(AnticheatPanel anticheatPanel) {
-		this.anticheatPanel = anticheatPanel;
 	}
 	
 	public void registerHotkeyPanel(HotkeyPanel hotkeyPanel) {
@@ -159,8 +139,6 @@ public class Controller implements HotkeyListener {
 	 */
 	public void enableComponents() {
 		for (Component c : delayPanel.getComponents()) c.setEnabled(true);
-		GuiUtil.setEnabledRecurse(durationPanel, true);
-		GuiUtil.setEnabledRecurse(anticheatPanel, true);
 		GuiUtil.setEnabledRecurse(hotkeyPanel, true);
 		runPanel.enableComponents();
 	}
@@ -170,10 +148,7 @@ public class Controller implements HotkeyListener {
 	 */
 	public void disableComponents() {
 		for (Component c : delayPanel.getComponents()) c.setEnabled(false);
-		GuiUtil.setEnabledRecurse(durationPanel, false);
-		GuiUtil.setEnabledRecurse(anticheatPanel, false);
 		GuiUtil.setEnabledRecurse(hotkeyPanel, false);
-		durationPanel.setEnabled(false);
 		runPanel.disableComponents();
 	}
 	
@@ -186,14 +161,6 @@ public class Controller implements HotkeyListener {
 		disableComponents();
 
 		autoClicker.beginClicking();
-	}
-
-	public void setBasicViewMode() {
-		mainFrame.setBasicViewMode();
-	}
-	
-	public void setAdvancedViewMode() {
-		mainFrame.setAdvancedViewMode();
 	}
 	
 	/**

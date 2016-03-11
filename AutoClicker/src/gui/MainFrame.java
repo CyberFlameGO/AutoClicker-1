@@ -8,9 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import autoclicker.Model;
-import gui.panels.AnticheatPanel;
 import gui.panels.DelayPanel;
-import gui.panels.DurationPanel;
 import gui.panels.HotkeyPanel;
 import gui.panels.InfoPanel;
 import gui.panels.RunPanel;
@@ -19,8 +17,6 @@ public class MainFrame extends JFrame {
 
 	private DelayPanel delayPanel;
 	private HotkeyPanel hotkeyPanel;
-	private AnticheatPanel anticheatPanel;
-	private DurationPanel durationPanel;
 	private RunPanel runPanel;
 	private InfoPanel infoPanel;
 
@@ -32,9 +28,7 @@ public class MainFrame extends JFrame {
 		GuiUtil.setNativeLAndF();
 
 		model = new Model();
-		
 		controller = new Controller(model);
-		controller.registerMainFrame(this);
 		
 		initPanels();
 		setupLayout();
@@ -43,17 +37,13 @@ public class MainFrame extends JFrame {
 	
 	private void initPanels() {
 		hotkeyPanel = new HotkeyPanel();
-		anticheatPanel = new AnticheatPanel(model);
 		delayPanel = new DelayPanel(model);
-		durationPanel = new DurationPanel(model);
 		runPanel = new RunPanel(controller);
 		infoPanel = new InfoPanel();
 		
 		controller.registerInfoPanel(infoPanel);
 		controller.registerDelayPanel(delayPanel);
-		controller.registerDurationPanel(durationPanel);
 		controller.registerRunPanel(runPanel);
-		controller.registerAnticheatPanel(anticheatPanel);
 		controller.registerHotkeyPanel(hotkeyPanel);
 	}
 	
@@ -61,25 +51,13 @@ public class MainFrame extends JFrame {
 		setBasicViewMode();
 	}
 	
-	public void setBasicViewMode() {
+	private void setBasicViewMode() {
 		List<JPanel> panels = new ArrayList<JPanel>();
 		panels.add(hotkeyPanel);
 		panels.add(delayPanel);
 		panels.add(runPanel);
 		panels.add(infoPanel);
 	
-		setViewMode(panels);
-	}
-	
-	public void setAdvancedViewMode() {
-		List<JPanel> panels = new ArrayList<JPanel>();
-		panels.add(hotkeyPanel);
-		panels.add(anticheatPanel);
-		panels.add(delayPanel);
-		panels.add(durationPanel);
-		panels.add(runPanel);
-		panels.add(infoPanel);
-		
 		setViewMode(panels);
 	}
 	
@@ -99,7 +77,6 @@ public class MainFrame extends JFrame {
 	
 	private void initFrame() {
 		setJMenuBar(new Toolbar(controller));
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();

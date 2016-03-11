@@ -66,6 +66,7 @@ public class GuiUtil {
 	public static void addChangeListener(final JTextComponent text, final ChangeListener changeListener) {
 	    Objects.requireNonNull(text);
 	    Objects.requireNonNull(changeListener);
+	    
 	    final DocumentListener dl = new DocumentListener() {
 	        private int lastChange = 0, lastNotifiedChange = 0;
 
@@ -94,8 +95,8 @@ public class GuiUtil {
 	            });
 	        }
 	    };
+	    
 	    text.addPropertyChangeListener("document", new PropertyChangeListener() {
-	    	
 			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 		        Document d1 = (Document)e.getOldValue();
@@ -105,6 +106,7 @@ public class GuiUtil {
 		        dl.changedUpdate(null);
 			}
 	    });
+	    
 	    Document d = text.getDocument();
 	    if (d != null) d.addDocumentListener(dl);
 	}
