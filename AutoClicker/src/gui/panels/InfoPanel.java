@@ -1,4 +1,4 @@
-package gui;
+package gui.panels;
 
 import java.awt.GridLayout;
 
@@ -20,7 +20,7 @@ public class InfoPanel extends JPanel {
 		
 		currentStatusLabel = new JLabel("Not Running");
 		currentClickLabel = new JLabel("0");
-		currentTimeLabel = new JLabel("0");
+		currentTimeLabel = new JLabel("0.000");
 		
 		add(statusLabel);
 		add(currentStatusLabel);

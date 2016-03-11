@@ -1,4 +1,4 @@
-package gui;
+package gui.panels;
 
 import java.awt.GridLayout;
 
@@ -8,14 +8,19 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import autoclicker.Model;
+
 public class DurationPanel extends JPanel {
 
 	private JRadioButton foreverRButton, numClicksRButton, timeDurationRButton;
 	private JTextField durationCountField, delaySecondsField, delayMilliSecondsField;
 	private Integer numClicks = 0;
 
+	private Model model;
 
-	public DurationPanel() {
+	public DurationPanel(Model model) {
+		this.model = model;
+		
 		initComponents();
 	}
 

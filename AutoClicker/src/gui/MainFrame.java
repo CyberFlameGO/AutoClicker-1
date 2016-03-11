@@ -1,17 +1,22 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
+import autoclicker.Model;
+import gui.panels.AnticheatPanel;
+import gui.panels.DelayPanel;
+import gui.panels.DurationPanel;
+import gui.panels.HotkeyPanel;
+import gui.panels.InfoPanel;
+import gui.panels.RunPanel;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
 
-	//panels
 	private DelayPanel delayPanel;
 	private HotkeyPanel hotkeyPanel;
 	private AnticheatPanel anticheatPanel;
@@ -19,13 +24,17 @@ public class MainFrame extends JFrame{
 	private RunPanel runPanel;
 	private InfoPanel infoPanel;
 
-	Controller controller;
+	private Controller controller;
+	private Model model;
 
 	public MainFrame() {
 		super("Autoclicker");
-		setNativeLAndF();
+		GuiUtil.setNativeLAndF();
 
-		controller = new Controller();
+		model = new Model();
+		
+		controller = new Controller(model);
+		controller.registerMainFrame(this);
 		
 		initPanels();
 		setupLayout();
@@ -33,10 +42,10 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initPanels() {
-		hotkeyPanel = new HotkeyPanel(controller);
-		anticheatPanel = new AnticheatPanel(controller);
-		delayPanel = new DelayPanel();
-		durationPanel = new DurationPanel();
+		hotkeyPanel = new HotkeyPanel();
+		anticheatPanel = new AnticheatPanel(model);
+		delayPanel = new DelayPanel(model);
+		durationPanel = new DurationPanel(model);
 		runPanel = new RunPanel(controller);
 		infoPanel = new InfoPanel();
 		
@@ -49,55 +58,52 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void setupLayout() {
+		setBasicViewMode();
+	}
+	
+	public void setBasicViewMode() {
+		List<JPanel> panels = new ArrayList<JPanel>();
+		panels.add(hotkeyPanel);
+		panels.add(delayPanel);
+		panels.add(runPanel);
+		panels.add(infoPanel);
+	
+		setViewMode(panels);
+	}
+	
+	public void setAdvancedViewMode() {
+		List<JPanel> panels = new ArrayList<JPanel>();
+		panels.add(hotkeyPanel);
+		panels.add(anticheatPanel);
+		panels.add(delayPanel);
+		panels.add(durationPanel);
+		panels.add(runPanel);
+		panels.add(infoPanel);
+		
+		setViewMode(panels);
+	}
+	
+	private void setViewMode(List<JPanel> panels) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		panel.add(hotkeyPanel);
-		panel.add(anticheatPanel);
-		panel.add(delayPanel);
-		panel.add(durationPanel);
-		panel.add(runPanel);
-		panel.add(infoPanel);
+		for (JPanel p : panels) {
+			panel.add(p); 
+		}
 		
+		getContentPane().removeAll();
 		getContentPane().add(panel);
+		pack();
+		repaint();
 	}
 	
-	
 	private void initFrame() {
+		setJMenuBar(new Toolbar(controller));
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();
-		center();
+		GuiUtil.center(this);
 		setVisible(true);
-	}
-	
-	/**
-	 * Sets native look and feel.
-	 */
-	private void setNativeLAndF() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			//do nothing. It will default to normal
-		}
-	}
-
-	/**
-	 * Centers the frame.
-	 */
-	private void center() {
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		int w = getSize().width;
-		int h = getSize().height;
-		int x = (dim.width - w) / 2;
-		int y = (dim.height - h) / 2;
-
-		setLocation(x, y);
-	}
-
-	@SuppressWarnings("unused")
-	private void submitTextfieldValues() {
-
 	}
 }

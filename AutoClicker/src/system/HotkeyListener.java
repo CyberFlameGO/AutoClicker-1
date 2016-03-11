@@ -1,4 +1,4 @@
-package autoclicker;
+package system;
 
 /**
  * The interface represents an object which is notified whenever the hotkey combination is pressed.

@@ -1,4 +1,4 @@
-package gui;
+package gui.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import autoclicker.AutoClicker;
+import autoclicker.Model;
+import misc.Globals;
 
 public class AnticheatPanel extends JPanel {
 	
@@ -25,10 +26,11 @@ public class AnticheatPanel extends JPanel {
 	private JLabel spreadLabel, variationLabel;
 	private JSlider spreadSlider, variationSlider;
 	
-	private Controller controller;
+	private Model model;
 	
-	public AnticheatPanel(Controller controller) {
-		this.controller = controller;
+	public AnticheatPanel(Model model) {
+		this.model = model;
+		
 		initComponents();
 		initListeners();
 	}
@@ -41,8 +43,8 @@ public class AnticheatPanel extends JPanel {
 		anticheatAdvanced = new JRadioButton("Advanced configuration");
 		spreadLabel = new JLabel("Spread");
 		variationLabel = new JLabel("Variation");
-		spreadSlider = new JSlider(0, AutoClicker.MAX_SPREAD, AutoClicker.DEFAULT_SPREAD); 
-		variationSlider = new JSlider(0, AutoClicker.MAX_VARIATION, AutoClicker.DEFAULT_VARIATION); 
+		spreadSlider = new JSlider(0, Globals.MAX_SPREAD, Globals.DEFAULT_SPREAD); 
+		variationSlider = new JSlider(0, Globals.MAX_VARIATION, Globals.DEFAULT_VARIATION); 
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(anticheatDefault);
@@ -98,8 +100,7 @@ public class AnticheatPanel extends JPanel {
 				spreadSlider.setEnabled(sliderEnabled);
 				variationSlider.setEnabled(sliderEnabled);
 
-
-				controller.setAnticheatEnabled(optionEnabled);
+				model.setAnticheatEnabled(optionEnabled);
 			}
 		});
 
@@ -114,7 +115,7 @@ public class AnticheatPanel extends JPanel {
 				}
 				
 				//send data to controller
-				controller.setAnticheatValues(spreadSlider.getValue(), variationSlider.getValue());
+				model.setAnticheatValues(spreadSlider.getValue(), variationSlider.getValue());
 
 				spreadLabel.setEnabled(!selected);
 				variationLabel.setEnabled(!selected);
