@@ -17,7 +17,7 @@ public class Controller implements HotkeyListener {
 	
 	private AutoClicker autoClicker;
 
-	private volatile State currentState = State.stopped;
+	private State currentState = State.stopped;
 
 	private HotkeyPanel hotkeyPanel;
 	private InfoPanel infoPanel;
@@ -50,8 +50,7 @@ public class Controller implements HotkeyListener {
 	@Override
 	public void hotkeyPressed() {
 		if (currentState == State.stopped) {
-			if (!testAndSetDelayBetweenClicks()) return;
-			beginClicking();
+			startPressed();
 		} else {
 			stopPressed();
 		}
@@ -60,12 +59,8 @@ public class Controller implements HotkeyListener {
 	/**
 	 * Starts the clicking process.
 	 * If clicking is already happening, this does nothing.
-	 * If the timer is clicking down, this does nothing.
-	 * Otherwise it counts down the timer and once it hits 0 it begins clicking.
-	 * This can be interrupted by the stop button.
 	 */
 	public void startPressed() {
-		//only do something if we're currently stopped
 		if (currentState == State.stopped) {
 			if (!testAndSetDelayBetweenClicks()) return;
 
@@ -82,9 +77,7 @@ public class Controller implements HotkeyListener {
 	public void stopPressed() {
 		currentState = State.stopped;
 		infoPanel.setInfo("Clicking Stopped");
-		infoPanel.setClicks(0);
-		infoPanel.setTime("0.000");
-		enableComponents();
+		setComponentsEnabled(true);
 		autoClicker.stopClicking();
 	}
 
@@ -110,46 +103,27 @@ public class Controller implements HotkeyListener {
 	}
 
 	public void setClicks(int clicks) {
-		//TODO fix this. 
-		//This method is being called before the infoPanel has been registered with this panel.
-		//need to fix the order things are instantiated in.
-		if (infoPanel != null) infoPanel.setClicks(clicks);
+		infoPanel.setClicks(clicks);
 	}
 
-	public void setTime(long millis) {
-		if (currentState == State.stopped) {
-			if (infoPanel != null) infoPanel.setTime("0.000");
-		}
-		//TODO fix this. 
-		//This method is being called before the infoPanel has been registered with this panel.
-		//need to fix the order things are instantiated in.
-		
+	public void setTime(long millis) {		
 		long seconds = millis / 1000;
 		long oneths = (millis - seconds * 1000) / 100;
 		long tenths = (millis - seconds * 1000 - oneths * 100) / 10;
 		long hundreths = (millis - seconds * 1000 - oneths * 100 - tenths * 10);
 		
 		String time = seconds + "." + oneths + tenths + hundreths;
-		
-		if (infoPanel != null) infoPanel.setTime(time);
+		infoPanel.setTime(time);
 	}
 	
 	/**
-	 * Enables various components so the user can interact again after finishing a clicking session.
+	 * Enables or disables various components so the user can interact again 
+	 * after finishing a clicking session.
 	 */
-	public void enableComponents() {
-		for (Component c : delayPanel.getComponents()) c.setEnabled(true);
-		GuiUtil.setEnabledRecurse(hotkeyPanel, true);
-		runPanel.enableComponents();
-	}
-	
-	/**
-	 * Disables various components so the user cannot change settings during a clicking session.
-	 */
-	public void disableComponents() {
-		for (Component c : delayPanel.getComponents()) c.setEnabled(false);
-		GuiUtil.setEnabledRecurse(hotkeyPanel, false);
-		runPanel.disableComponents();
+	public void setComponentsEnabled(boolean enabled) {
+		for (Component c : delayPanel.getComponents()) c.setEnabled(enabled);
+		for (Component c : hotkeyPanel.getComponents()) c.setEnabled(enabled);
+		runPanel.setEnabled(enabled);
 	}
 	
 	/**
@@ -158,7 +132,9 @@ public class Controller implements HotkeyListener {
 	private void beginClicking() {
 		currentState = State.clicking;
 		infoPanel.setInfo("Clicking Started");
-		disableComponents();
+		infoPanel.setClicks(0);
+		infoPanel.setTime("0.000");
+		setComponentsEnabled(false);
 
 		autoClicker.beginClicking();
 	}

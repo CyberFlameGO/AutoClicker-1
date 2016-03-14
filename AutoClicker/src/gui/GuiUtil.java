@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Objects;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -31,9 +32,6 @@ public class GuiUtil {
 		frame.setLocation(x, y);
 	}
 	
-	/**
-	 * Sets native look and feel.
-	 */
 	public static void setNativeLAndF() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -109,5 +107,12 @@ public class GuiUtil {
 	    
 	    Document d = text.getDocument();
 	    if (d != null) d.addDocumentListener(dl);
+	}
+	
+	public static void displayErrorDialog(String errorMessage) {
+		String title = "Error";
+		String message =  "<html>Error: <br><br>" + errorMessage +  "<br><br>Program will now exit.</html>";
+		
+		JOptionPane.showMessageDialog(null,  message, title, JOptionPane.ERROR_MESSAGE);
 	}
 }

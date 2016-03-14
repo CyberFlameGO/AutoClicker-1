@@ -8,15 +8,19 @@ import javax.swing.border.TitledBorder;
 
 public class InfoPanel extends JPanel {
 
-	private JLabel statusLabel, currentStatusLabel, timeLabel, currentTimeLabel, clickLabel, currentClickLabel;
+	private JLabel currentStatusLabel, currentTimeLabel, currentClickLabel;
 	
 	public InfoPanel() {
+		initComponents();
+	}
+	
+	private void initComponents() {
 		setBorder(new TitledBorder(null, "Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new GridLayout(0, 2));
 		
-		statusLabel = new JLabel("Status:");
-		clickLabel = new JLabel("Clicks:");
-		timeLabel = new JLabel("Time:");
+		JLabel statusLabel = new JLabel("Status:");
+		JLabel clickLabel = new JLabel("Clicks:");
+		JLabel timeLabel = new JLabel("Time:");
 		
 		currentStatusLabel = new JLabel("Not Running");
 		currentClickLabel = new JLabel("0");

@@ -1,6 +1,9 @@
 package gui.panels;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.text.NumberFormat;
+import java.util.Optional;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -9,13 +12,11 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import autoclicker.Model;
-import gui.GuiUtil;
 import misc.Globals;
 
 public class DelayPanel extends JPanel {
 	
 	private JTextField milliTextbox;
-
 	private Model model;
 	
 	public DelayPanel(Model model) {
@@ -41,23 +42,41 @@ public class DelayPanel extends JPanel {
 	}
 
 	private void initListeners() {
-		GuiUtil.addChangeListener(milliTextbox, e -> attemptSetDelay(milliTextbox.getText()));
+		milliTextbox.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				attemptSetDelay(milliTextbox.getText());
+			}
+		});
+	}
+		
+	private void attemptSetDelay(String newDelay) {
+		Optional<Integer> val = getNumber(newDelay);
+		
+		if (val.isPresent()) {
+			model.setClickDelay(val.get());
+		} else {
+			model.setClickDelay(Globals.DEFAULT_CLICK_DELAY);
+			milliTextbox.setText(Integer.toString(Globals.DEFAULT_CLICK_DELAY));
+		}
 	}
 	
-	private void attemptSetDelay(String newDelay) {
-		int val = 0;
+	/**
+	 * Parses the delay-time from the given newDelay argument.
+	 * 
+	 * @return a valid value, or Optional.empty()
+	 */
+	private Optional<Integer> getNumber(String newDelay) {
 		try {
-			val = Integer.parseInt(newDelay);
+			int value = Integer.parseInt(newDelay);
 			
-			if (val < 0) {
-				milliTextbox.setText(Integer.toString(Globals.DEFAULT_CLICK_DELAY));
-				val = Globals.DEFAULT_CLICK_DELAY;
+			if (value > 0) {
+				return Optional.of(value);
+			} else {
+				return Optional.empty();
 			}
 		} catch (NumberFormatException e) {
-			//text somehow wasn't a number, so return -1
-			val = Globals.DEFAULT_CLICK_DELAY;
+			return Optional.empty();
 		}
-		
-		model.setClickDelay(val);
 	}
 }

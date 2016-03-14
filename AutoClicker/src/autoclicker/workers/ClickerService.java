@@ -14,10 +14,14 @@ public class ClickerService {
 	
 	private Controller controller;
 	private Clicker clicker;
-	private int clicksPerformed;
 	
 	private ScheduledExecutorService service;
-	private ScheduledFuture<?> scheduledFuture;
+	
+	private ScheduledFuture<?> scheduledFutureClick;
+	private int clicksPerformed;
+	
+	private ScheduledFuture<?> scheduledFutureTimer;
+	private long startClickTime;
 	
 	public ClickerService(Clicker clicker, Controller controller) {
 		this.clicker = clicker;
@@ -29,8 +33,10 @@ public class ClickerService {
 	public void startClicking(int clickDelay) {
 		if (isClicking) throw new IllegalStateException();
 		
+		startClickTime = System.currentTimeMillis();
 		isClicking = true;
-		scheduledFuture = service.scheduleAtFixedRate(this::performClick, clickDelay, clickDelay, TimeUnit.MILLISECONDS);
+		scheduledFutureClick = service.scheduleAtFixedRate(this::performClick, clickDelay, clickDelay, TimeUnit.MILLISECONDS);
+		scheduledFutureTimer = service.scheduleAtFixedRate(this::updateDisplayTime, 0, 11, TimeUnit.MILLISECONDS);
 	}
 	
 	private void performClick() {
@@ -48,6 +54,12 @@ public class ClickerService {
 		
 		isClicking = false;
 		clicksPerformed = 0;
-		scheduledFuture.cancel(false);
+		scheduledFutureClick.cancel(false);
+		scheduledFutureTimer.cancel(false);
+	}
+	
+	private void updateDisplayTime() {
+		long msElapsed = System.currentTimeMillis() - startClickTime;
+		controller.setTime(msElapsed);
 	}
 }

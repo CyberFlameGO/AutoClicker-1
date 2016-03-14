@@ -10,18 +10,19 @@ import java.awt.event.KeyEvent;
  */
 public final class Hotkey {
 
-	/**
-	 * The modifier our system is currently using. Should only be changed from the GUI.
-	 */
 	public static Modifier MODIFIER = Hotkey.Modifier.ctrl;
-	
-	/**
-	 * The number key our system is currently using. Should only be changed from the GUI.
-	 */
 	public static Numkey NUMBER = Hotkey.Numkey.one;
 	
 	private Hotkey() {
 		//stop instantiation
+	}
+	
+	public static void setModifier(Hotkey.Modifier modifier) {
+		Hotkey.MODIFIER = modifier;
+	}
+	
+	public static void setNumber(Hotkey.Numkey number) {
+		Hotkey.NUMBER = number;
 	}
 	
 	public enum Modifier {

@@ -36,14 +36,9 @@ public class RunPanel extends JPanel {
 		add(stopButton);
 		add(panel);
 	}
-
-	public void enableComponents() {
-		startButton.setEnabled(true);
-		stopButton.setEnabled(false);
-	}
-
-	public void disableComponents() {
-		startButton.setEnabled(false);
-		stopButton.setEnabled(true);
+	
+	public void setEnabled(boolean enabled) {
+		startButton.setEnabled(enabled);
+		stopButton.setEnabled(!enabled);
 	}
 }

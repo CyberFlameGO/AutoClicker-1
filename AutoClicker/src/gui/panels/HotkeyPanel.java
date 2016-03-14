@@ -1,8 +1,5 @@
 package gui.panels;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,10 +11,7 @@ import gui.Hotkey.Numkey;
 
 /**
  * Panel contains the current keys used for the stop/ start hotkey combination.
- * <p>
- * The dropdown box also lets the user change the values at any time.
- * <P>
- * There is also a checkbox to let the user ignore the delay timeout when using hotkeys.
+ * A dropdown box lets the user change the values.
  *
  * @author Troy Shaw
  */
@@ -48,15 +42,7 @@ public class HotkeyPanel extends JPanel {
 	}
 
 	private void initListeners() {
-		ActionListener a = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Hotkey.MODIFIER = (Modifier) modifierComboBox.getSelectedItem();
-				Hotkey.NUMBER = (Numkey) numberComboBox.getSelectedItem();
-			}
-		};
-		
-		modifierComboBox.addActionListener(a);
-		numberComboBox.addActionListener(a);
+		modifierComboBox.addActionListener(ae -> Hotkey.setModifier(modifierComboBox.getItemAt(modifierComboBox.getSelectedIndex())));
+		numberComboBox.addActionListener(ae -> Hotkey.setNumber(numberComboBox.getItemAt(numberComboBox.getSelectedIndex())));
 	}
 }

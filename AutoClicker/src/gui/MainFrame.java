@@ -1,8 +1,5 @@
 package gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -48,31 +45,15 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void setupLayout() {
-		setBasicViewMode();
-	}
-	
-	private void setBasicViewMode() {
-		List<JPanel> panels = new ArrayList<JPanel>();
-		panels.add(hotkeyPanel);
-		panels.add(delayPanel);
-		panels.add(runPanel);
-		panels.add(infoPanel);
-	
-		setViewMode(panels);
-	}
-	
-	private void setViewMode(List<JPanel> panels) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-		for (JPanel p : panels) {
-			panel.add(p); 
-		}
 		
-		getContentPane().removeAll();
+		panel.add(hotkeyPanel);
+		panel.add(delayPanel);
+		panel.add(runPanel);
+		panel.add(infoPanel);
+		
 		getContentPane().add(panel);
-		pack();
-		repaint();
 	}
 	
 	private void initFrame() {

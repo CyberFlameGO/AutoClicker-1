@@ -4,7 +4,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import javax.swing.JOptionPane;
+import gui.GuiUtil;
 
 public class Clicker {
 
@@ -14,11 +14,7 @@ public class Clicker {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			String title = "Error";
-			String message = "<html>Error message 1<br><br>Cannot instantiate java.awt.Robot." +
-					"<br>Please give Java sufficient permissions." + 
-					"<br><br>Program will now exit.</html>";
-			JOptionPane.showMessageDialog(null,  message, title, JOptionPane.ERROR_MESSAGE);
+			GuiUtil.displayErrorDialog("Cannot instantiate java.awt.Robot");
 			System.exit(1);
 		}
 	}
