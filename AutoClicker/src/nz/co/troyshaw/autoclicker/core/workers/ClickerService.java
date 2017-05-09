@@ -1,12 +1,12 @@
-package autoclicker.workers;
+package nz.co.troyshaw.autoclicker.core.workers;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import autoclicker.Clicker;
-import gui.Controller;
+import nz.co.troyshaw.autoclicker.core.Clicker;
+import nz.co.troyshaw.autoclicker.gui.Controller;
 
 public class ClickerService {
 
@@ -30,12 +30,12 @@ public class ClickerService {
 		service = Executors.newSingleThreadScheduledExecutor();
 	}
 	
-	public void startClicking(int clickDelay) {
+	public void startClicking(int timeBetweenClicks) {
 		if (isClicking) throw new IllegalStateException();
 		
 		startClickTime = System.currentTimeMillis();
 		isClicking = true;
-		scheduledFutureClick = service.scheduleAtFixedRate(this::performClick, clickDelay, clickDelay, TimeUnit.MILLISECONDS);
+		scheduledFutureClick = service.scheduleAtFixedRate(this::performClick, timeBetweenClicks, timeBetweenClicks, TimeUnit.MILLISECONDS);
 		scheduledFutureTimer = service.scheduleAtFixedRate(this::updateDisplayTime, 0, 11, TimeUnit.MILLISECONDS);
 	}
 	

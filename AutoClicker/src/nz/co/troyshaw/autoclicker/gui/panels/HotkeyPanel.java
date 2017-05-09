@@ -1,13 +1,13 @@
-package gui.panels;
+package nz.co.troyshaw.autoclicker.gui.panels;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import gui.Hotkey;
-import gui.Hotkey.Modifier;
-import gui.Hotkey.Numkey;
+import nz.co.troyshaw.autoclicker.gui.Hotkey;
+import nz.co.troyshaw.autoclicker.gui.Hotkey.Modifier;
+import nz.co.troyshaw.autoclicker.gui.Hotkey.Numkey;
 
 /**
  * Panel contains the current keys used for the stop/ start hotkey combination.

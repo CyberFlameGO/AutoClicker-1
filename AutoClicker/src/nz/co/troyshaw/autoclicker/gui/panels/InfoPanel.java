@@ -1,4 +1,4 @@
-package gui.panels;
+package nz.co.troyshaw.autoclicker.gui.panels;
 
 import java.awt.GridLayout;
 

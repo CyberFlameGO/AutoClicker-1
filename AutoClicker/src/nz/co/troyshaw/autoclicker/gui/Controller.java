@@ -1,33 +1,33 @@
-package gui;
+package nz.co.troyshaw.autoclicker.gui;
 
 import java.awt.Component;
 
-import autoclicker.AutoClicker;
-import autoclicker.Model;
-import gui.panels.DelayPanel;
-import gui.panels.HotkeyPanel;
-import gui.panels.InfoPanel;
-import gui.panels.RunPanel;
-import system.HotkeyListener;
-import system.HotkeyNotifier;
+import nz.co.troyshaw.autoclicker.core.AutoClicker;
+import nz.co.troyshaw.autoclicker.core.AutoclickerModel;
+import nz.co.troyshaw.autoclicker.gui.panels.DelayPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.HotkeyPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.InfoPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.RunPanel;
+import nz.co.troyshaw.autoclicker.system.HotkeyListener;
+import nz.co.troyshaw.autoclicker.system.HotkeyNotifier;
 
 public class Controller implements HotkeyListener {
 
-	private Model model;
-	
+	private AutoclickerModel model;
 	private AutoClicker autoClicker;
 
-	private State currentState = State.stopped;
+	private State currentState = State.idle;
 
 	private HotkeyPanel hotkeyPanel;
 	private InfoPanel infoPanel;
 	private DelayPanel delayPanel;
 	private RunPanel runPanel;
 	
-	public Controller(Model model) {
+	public Controller(AutoclickerModel model) {
 		this.model = model;
 		
 		autoClicker = new AutoClicker(model, this);
+		
 		new HotkeyNotifier(this);
 	}
 	
@@ -49,7 +49,7 @@ public class Controller implements HotkeyListener {
 
 	@Override
 	public void hotkeyPressed() {
-		if (currentState == State.stopped) {
+		if (currentState == State.idle) {
 			startPressed();
 		} else {
 			stopPressed();
@@ -61,7 +61,7 @@ public class Controller implements HotkeyListener {
 	 * If clicking is already happening, this does nothing.
 	 */
 	public void startPressed() {
-		if (currentState == State.stopped) {
+		if (currentState == State.idle) {
 			if (!testAndSetDelayBetweenClicks()) return;
 
 			beginClicking();
@@ -70,12 +70,12 @@ public class Controller implements HotkeyListener {
 
 	/**
 	 * Stops the current activity. 
+	 * 
 	 * If the program is autoclicking, it stops immediately. 
-	 * If the program is currently counting down to an autoclick, it stops immediately.
 	 * If the program is currently idle, nothing happens.
 	 */
 	public void stopPressed() {
-		currentState = State.stopped;
+		currentState = State.idle;
 		infoPanel.setInfo("Clicking Stopped");
 		setComponentsEnabled(true);
 		autoClicker.stopClicking();
@@ -90,12 +90,12 @@ public class Controller implements HotkeyListener {
 	 * @return true if valid, false otherwise
 	 */
 	private boolean testAndSetDelayBetweenClicks() {
-		int delayBetween = model.getClickDelay();
+		int timeBetweenClicks = model.getTimeBetweenClicks();
 
-		if (delayBetween == -1) {
+		if (timeBetweenClicks == -1) {
 			//was invalid so display to user and return
 			infoPanel.setInfo("Invalid delay between clicks");
-			currentState = State.stopped;
+			currentState = State.idle;
 			return false;
 		} else {
 			return true;
@@ -123,11 +123,12 @@ public class Controller implements HotkeyListener {
 	public void setComponentsEnabled(boolean enabled) {
 		for (Component c : delayPanel.getComponents()) c.setEnabled(enabled);
 		for (Component c : hotkeyPanel.getComponents()) c.setEnabled(enabled);
+		
 		runPanel.setEnabled(enabled);
 	}
 	
 	/**
-	 * Begins autoclicking immediately. This should be called after any countdowns, etc.
+	 * Begins autoclicking immediately.
 	 */
 	private void beginClicking() {
 		currentState = State.clicking;
@@ -144,5 +145,5 @@ public class Controller implements HotkeyListener {
 	 *
 	 * @author Troy Shaw
 	 */
-	private enum State {clicking, stopped}
+	private enum State {clicking, idle}
 }

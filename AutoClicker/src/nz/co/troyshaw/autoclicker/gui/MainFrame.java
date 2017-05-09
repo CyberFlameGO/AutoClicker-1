@@ -1,14 +1,14 @@
-package gui;
+package nz.co.troyshaw.autoclicker.gui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import autoclicker.Model;
-import gui.panels.DelayPanel;
-import gui.panels.HotkeyPanel;
-import gui.panels.InfoPanel;
-import gui.panels.RunPanel;
+import nz.co.troyshaw.autoclicker.core.AutoclickerModel;
+import nz.co.troyshaw.autoclicker.gui.panels.DelayPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.HotkeyPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.InfoPanel;
+import nz.co.troyshaw.autoclicker.gui.panels.RunPanel;
 
 public class MainFrame extends JFrame {
 
@@ -18,13 +18,14 @@ public class MainFrame extends JFrame {
 	private InfoPanel infoPanel;
 
 	private Controller controller;
-	private Model model;
+	private AutoclickerModel model;
 
 	public MainFrame() {
 		super("Autoclicker");
+		
 		GuiUtil.setNativeLAndF();
 
-		model = new Model();
+		model = new AutoclickerModel();
 		controller = new Controller(model);
 		
 		initPanels();
@@ -57,7 +58,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void initFrame() {
-		setJMenuBar(new Toolbar(controller));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();

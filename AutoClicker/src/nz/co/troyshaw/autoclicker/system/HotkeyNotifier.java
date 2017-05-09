@@ -1,4 +1,4 @@
-package system;
+package nz.co.troyshaw.autoclicker.system;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.sun.jna.platform.KeyboardUtils;
 
-import gui.Hotkey;
+import nz.co.troyshaw.autoclicker.gui.Hotkey;
 
 /**
  * Class is responsible for monitoring keys being pressed and send an event in the case keys are.

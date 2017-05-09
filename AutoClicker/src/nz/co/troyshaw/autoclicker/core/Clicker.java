@@ -1,10 +1,8 @@
-package autoclicker;
+package nz.co.troyshaw.autoclicker.core;
 
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-
-import gui.GuiUtil;
 
 public class Clicker {
 
@@ -14,8 +12,7 @@ public class Clicker {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			GuiUtil.displayErrorDialog("Cannot instantiate java.awt.Robot");
-			System.exit(1);
+			throw new RuntimeException("Could not instantiate Robot");
 		}
 	}
 	

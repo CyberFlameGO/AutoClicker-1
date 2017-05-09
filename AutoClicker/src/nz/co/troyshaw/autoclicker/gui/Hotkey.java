@@ -1,4 +1,4 @@
-package gui;
+package nz.co.troyshaw.autoclicker.gui;
 
 import java.awt.event.KeyEvent;
 

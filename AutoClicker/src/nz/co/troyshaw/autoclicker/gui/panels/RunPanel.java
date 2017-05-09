@@ -1,11 +1,11 @@
-package gui.panels;
+package nz.co.troyshaw.autoclicker.gui.panels;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import gui.Controller;
+import nz.co.troyshaw.autoclicker.gui.Controller;
 
 public class RunPanel extends JPanel {
 

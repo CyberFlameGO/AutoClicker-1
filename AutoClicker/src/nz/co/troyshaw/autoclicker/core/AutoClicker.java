@@ -1,7 +1,7 @@
-package autoclicker;
+package nz.co.troyshaw.autoclicker.core;
 
-import autoclicker.workers.ClickerService;
-import gui.Controller;
+import nz.co.troyshaw.autoclicker.core.workers.ClickerService;
+import nz.co.troyshaw.autoclicker.gui.Controller;
 
 /**
  * Class represents the actual autoclicker.
@@ -11,12 +11,12 @@ import gui.Controller;
 public class AutoClicker {
 
 	private Controller controller;
-	private Model model;
+	private AutoclickerModel model;
 
 	private Clicker clicker;
 	private ClickerService clickerService;
 	
-	public AutoClicker(Model model, Controller controller) {
+	public AutoClicker(AutoclickerModel model, Controller controller) {
 		this.model = model;
 		this.controller = controller;
 		
@@ -27,9 +27,6 @@ public class AutoClicker {
 		clicker = new Clicker();
 		
 		clickerService = new ClickerService(clicker, controller);
-		
-		//timerWorker = new TimerWorker(model, controller);
-		//timerWorker.execute();
 	}
 
 	public boolean isRunning() {
@@ -38,7 +35,7 @@ public class AutoClicker {
 
 	public void beginClicking() {
 		model.setIsClicking(true);
-		clickerService.startClicking(model.getClickDelay());
+		clickerService.startClicking(model.getTimeBetweenClicks());
 	}
 
 	public void stopClicking() {

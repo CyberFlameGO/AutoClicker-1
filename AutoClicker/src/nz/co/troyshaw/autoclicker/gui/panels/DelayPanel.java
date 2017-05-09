@@ -1,4 +1,4 @@
-package gui.panels;
+package nz.co.troyshaw.autoclicker.gui.panels;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -11,15 +11,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import autoclicker.Model;
-import misc.Globals;
+import nz.co.troyshaw.autoclicker.core.AutoclickerModel;
+import nz.co.troyshaw.autoclicker.misc.Globals;
 
 public class DelayPanel extends JPanel {
 	
-	private JTextField milliTextbox;
-	private Model model;
+	public final static int DEFAULT_TIME_BETWEEN_CLICKSs = 1000;
 	
-	public DelayPanel(Model model) {
+	private JTextField milliTextbox;
+	private AutoclickerModel model;
+	
+	public DelayPanel(AutoclickerModel model) {
 		this.model = model;
 		
 		initComponents();
@@ -35,7 +37,7 @@ public class DelayPanel extends JPanel {
 		nm.setGroupingUsed(false);
 		milliTextbox = new JFormattedTextField(nm);
 		milliTextbox.setColumns(10);
-		milliTextbox.setText(Integer.toString(Globals.DEFAULT_CLICK_DELAY));
+		milliTextbox.setText(Integer.toString(Globals.DEFAULT_TIME_BETWEEN_CLICKS));
 
 		add(delayMilliLabel);
 		add(milliTextbox);
@@ -54,10 +56,10 @@ public class DelayPanel extends JPanel {
 		Optional<Integer> val = getNumber(newDelay);
 		
 		if (val.isPresent()) {
-			model.setClickDelay(val.get());
+			model.setTimeBetweenClicks(val.get());
 		} else {
-			model.setClickDelay(Globals.DEFAULT_CLICK_DELAY);
-			milliTextbox.setText(Integer.toString(Globals.DEFAULT_CLICK_DELAY));
+			model.setTimeBetweenClicks(Globals.DEFAULT_TIME_BETWEEN_CLICKS);
+			milliTextbox.setText(Integer.toString(Globals.DEFAULT_TIME_BETWEEN_CLICKS));
 		}
 	}
 	

@@ -1,10 +1,9 @@
-package system;
+package nz.co.troyshaw.autoclicker.system;
 
 /**
  * The interface represents an object which is notified whenever the hotkey combination is pressed.
  * <br>
- * The keys are repsented as a modifier and a numerical key, both defined in the  <class>Hotkey</class> class.
- * 
+ * The keys are represented as a modifier and a numerical key, both defined in the  <class>Hotkey</class> class.
  *
  * @author Troy Shaw
  */
