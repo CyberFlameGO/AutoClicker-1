@@ -5,6 +5,10 @@ public class AutoclickerModel {
 	private int msBetweenClicks;
 	private boolean isClicking;
 	
+	public AutoclickerModel(int msBetweenClicks) {
+		this.msBetweenClicks = msBetweenClicks;
+	}
+	
 	public void setTimeBetweenClicks(int msBetweenClicks) {
 		if (msBetweenClicks < 0) throw new IllegalArgumentException();
 		this.msBetweenClicks = msBetweenClicks;

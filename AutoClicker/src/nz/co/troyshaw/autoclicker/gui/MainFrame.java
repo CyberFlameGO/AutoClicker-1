@@ -9,6 +9,7 @@ import nz.co.troyshaw.autoclicker.gui.panels.DelayPanel;
 import nz.co.troyshaw.autoclicker.gui.panels.HotkeyPanel;
 import nz.co.troyshaw.autoclicker.gui.panels.InfoPanel;
 import nz.co.troyshaw.autoclicker.gui.panels.RunPanel;
+import nz.co.troyshaw.autoclicker.misc.Globals;
 
 public class MainFrame extends JFrame {
 
@@ -25,7 +26,7 @@ public class MainFrame extends JFrame {
 		
 		GuiUtil.setNativeLAndF();
 
-		model = new AutoclickerModel();
+		model = new AutoclickerModel(Globals.DEFAULT_TIME_BETWEEN_CLICKS);
 		controller = new Controller(model);
 		
 		initPanels();
@@ -59,7 +60,6 @@ public class MainFrame extends JFrame {
 	
 	private void initFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
 		pack();
 		GuiUtil.center(this);
 		setVisible(true);
