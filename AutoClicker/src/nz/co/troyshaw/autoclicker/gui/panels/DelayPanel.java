@@ -15,15 +15,13 @@ import nz.co.troyshaw.autoclicker.core.AutoclickerModel;
 import nz.co.troyshaw.autoclicker.misc.Globals;
 
 public class DelayPanel extends JPanel {
-	
-	public final static int DEFAULT_TIME_BETWEEN_CLICKSs = 1000;
-	
+
 	private JTextField milliTextbox;
 	private AutoclickerModel model;
-	
+
 	public DelayPanel(AutoclickerModel model) {
 		this.model = model;
-		
+
 		initComponents();
 		initListeners();
 	}
@@ -51,10 +49,10 @@ public class DelayPanel extends JPanel {
 			}
 		});
 	}
-		
+
 	private void attemptSetDelay(String newDelay) {
 		Optional<Integer> val = getNumber(newDelay);
-		
+
 		if (val.isPresent()) {
 			model.setTimeBetweenClicks(val.get());
 		} else {
@@ -62,7 +60,7 @@ public class DelayPanel extends JPanel {
 			milliTextbox.setText(Integer.toString(Globals.DEFAULT_TIME_BETWEEN_CLICKS));
 		}
 	}
-	
+
 	/**
 	 * Parses the delay-time from the given newDelay argument.
 	 * 
@@ -71,7 +69,7 @@ public class DelayPanel extends JPanel {
 	private Optional<Integer> getNumber(String newDelay) {
 		try {
 			int value = Integer.parseInt(newDelay);
-			
+
 			if (value > 0) {
 				return Optional.of(value);
 			} else {

@@ -7,7 +7,7 @@ import java.awt.event.InputEvent;
 public class Clicker {
 
 	private Robot robot;
-	
+
 	public Clicker() {
 		try {
 			robot = new Robot();
@@ -15,7 +15,7 @@ public class Clicker {
 			throw new RuntimeException("Could not instantiate Robot");
 		}
 	}
-	
+
 	public void click() {
 		robot.mousePress(InputEvent.BUTTON1_MASK);
 		robot.mouseRelease(InputEvent.BUTTON1_MASK);

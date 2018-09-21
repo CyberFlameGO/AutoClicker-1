@@ -22,15 +22,15 @@ public class Controller implements HotkeyListener {
 	private InfoPanel infoPanel;
 	private DelayPanel delayPanel;
 	private RunPanel runPanel;
-	
+
 	public Controller(AutoclickerModel model) {
 		this.model = model;
-		
+
 		autoClicker = new AutoClicker(model, this);
-		
+
 		new HotkeyNotifier(this);
 	}
-	
+
 	public void registerInfoPanel(InfoPanel infoPanel) {
 		this.infoPanel = infoPanel;
 	}
@@ -38,11 +38,11 @@ public class Controller implements HotkeyListener {
 	public void registerDelayPanel(DelayPanel delayPanel) {
 		this.delayPanel = delayPanel;
 	}
-	
+
 	public void registerRunPanel(RunPanel runPanel) {
 		this.runPanel = runPanel;
 	}
-	
+
 	public void registerHotkeyPanel(HotkeyPanel hotkeyPanel) {
 		this.hotkeyPanel = hotkeyPanel;
 	}
@@ -57,22 +57,24 @@ public class Controller implements HotkeyListener {
 	}
 
 	/**
-	 * Starts the clicking process.
+	 * Starts the clicking process. 
 	 * If clicking is already happening, this does nothing.
 	 */
 	public void startPressed() {
 		if (currentState == State.idle) {
-			if (!testAndSetDelayBetweenClicks()) return;
+			if (!testAndSetDelayBetweenClicks()) {
+				return;
+			}
 
 			beginClicking();
 		}
 	}
 
 	/**
-	 * Stops the current activity. 
+	 * Stops the current activity.
 	 * 
-	 * If the program is autoclicking, it stops immediately. 
-	 * If the program is currently idle, nothing happens.
+	 * If the program is autoclicking, it stops immediately. If the program is
+	 * currently idle, nothing happens.
 	 */
 	public void stopPressed() {
 		currentState = State.idle;
@@ -82,10 +84,11 @@ public class Controller implements HotkeyListener {
 	}
 
 	/**
-	 * Checks if the value in the field is valid, and if so sets it and returns true.
-	 * Returns false if it's invalid.
+	 * Checks if the value in the field is valid, and if so sets it and returns
+	 * true. Returns false if it's invalid.
 	 * 
-	 * If an invalid value is present, sets the state to State.stopped and displays an error message.
+	 * If an invalid value is present, sets the state to State.stopped and displays
+	 * an error message.
 	 * 
 	 * @return true if valid, false otherwise
 	 */
@@ -93,9 +96,10 @@ public class Controller implements HotkeyListener {
 		int timeBetweenClicks = model.getTimeBetweenClicks();
 
 		if (timeBetweenClicks == -1) {
-			//was invalid so display to user and return
+			// was invalid so display to user and return
 			infoPanel.setInfo("Invalid delay between clicks");
 			currentState = State.idle;
+			
 			return false;
 		} else {
 			return true;
@@ -106,27 +110,27 @@ public class Controller implements HotkeyListener {
 		infoPanel.setClicks(clicks);
 	}
 
-	public void setTime(long millis) {		
+	public void setTime(long millis) {
 		long seconds = millis / 1000;
 		long oneths = (millis - seconds * 1000) / 100;
 		long tenths = (millis - seconds * 1000 - oneths * 100) / 10;
 		long hundreths = (millis - seconds * 1000 - oneths * 100 - tenths * 10);
-		
+
 		String time = seconds + "." + oneths + tenths + hundreths;
 		infoPanel.setTime(time);
 	}
-	
+
 	/**
-	 * Enables or disables various components so the user can interact again 
-	 * after finishing a clicking session.
+	 * Enables or disables various components so the user can interact again after
+	 * finishing a clicking session.
 	 */
 	public void setComponentsEnabled(boolean enabled) {
 		for (Component c : delayPanel.getComponents()) c.setEnabled(enabled);
 		for (Component c : hotkeyPanel.getComponents()) c.setEnabled(enabled);
-		
+
 		runPanel.setEnabled(enabled);
 	}
-	
+
 	/**
 	 * Begins autoclicking immediately.
 	 */
@@ -139,11 +143,14 @@ public class Controller implements HotkeyListener {
 
 		autoClicker.beginClicking();
 	}
-	
+
 	/**
 	 * Represents the current state of the system.
 	 *
 	 * @author Troy Shaw
 	 */
-	private enum State {clicking, idle}
+	private enum State {
+		clicking,
+		idle
+	}
 }

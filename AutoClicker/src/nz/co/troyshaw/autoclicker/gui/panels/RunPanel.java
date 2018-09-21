@@ -26,9 +26,9 @@ public class RunPanel extends JPanel {
 
 		startButton.addActionListener(e -> controller.startPressed());
 		stopButton.addActionListener(e -> controller.stopPressed());
-		
+
 		stopButton.setEnabled(false);
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -36,7 +36,7 @@ public class RunPanel extends JPanel {
 		add(stopButton);
 		add(panel);
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		startButton.setEnabled(enabled);
 		stopButton.setEnabled(!enabled);

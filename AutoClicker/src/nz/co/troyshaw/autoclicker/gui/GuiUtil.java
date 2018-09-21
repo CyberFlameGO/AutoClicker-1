@@ -10,7 +10,7 @@ public class GuiUtil {
 
 	public static void center(JFrame frame) {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
+
 		int w = frame.getSize().width;
 		int h = frame.getSize().height;
 		int x = (dim.width - w) / 2;
@@ -18,13 +18,12 @@ public class GuiUtil {
 
 		frame.setLocation(x, y);
 	}
-	
+
 	public static void setNativeLAndF() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			//do nothing. It will default to normal
+			// do nothing. It will default to normal
 		}
 	}
-
 }

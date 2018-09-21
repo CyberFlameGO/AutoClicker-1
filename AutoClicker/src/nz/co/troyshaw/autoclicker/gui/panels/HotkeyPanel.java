@@ -32,7 +32,7 @@ public class HotkeyPanel extends JPanel {
 		hotkeyLabel = new JLabel("Hotkey");
 		modifierComboBox = new JComboBox<Modifier>(Hotkey.Modifier.values());
 		numberComboBox = new JComboBox<Numkey>(Hotkey.Numkey.values());
-		
+
 		modifierComboBox.setSelectedItem(Hotkey.MODIFIER);
 		numberComboBox.setSelectedItem(Hotkey.NUMBER);
 

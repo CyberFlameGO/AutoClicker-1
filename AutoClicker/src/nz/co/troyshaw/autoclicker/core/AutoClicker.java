@@ -15,17 +15,17 @@ public class AutoClicker {
 
 	private Clicker clicker;
 	private ClickerService clickerService;
-	
+
 	public AutoClicker(AutoclickerModel model, Controller controller) {
 		this.model = model;
 		this.controller = controller;
-		
+
 		initialiseVariables();
 	}
-	
+
 	private void initialiseVariables() {
 		clicker = new Clicker();
-		
+
 		clickerService = new ClickerService(clicker, controller);
 	}
 
